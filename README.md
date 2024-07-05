@@ -10,14 +10,16 @@ Build special for Visual Studio environment, doesn't test on other IDE
 
 1. Clone it. If you don't know how, well, you need to learn basics
 
-2. Open in Visual Studio (inside folder "Open with Visual Studio")
+2. Rename cloned folder to your project name (recomment don't use spaces)
 
-3. In CMakeLists.txt follow coments, setting to your project. You must check:
+3. Open in Visual Studio (inside folder "Open with Visual Studio")
+
+4. In CMakeLists.txt follow coments, setting to your project. You must check:
     - CMake minimum version (recommend not below 3.12)
     - Project name (and in `add_executable` functions)
     - C++ language standard
 
-4. Update remote `origin` to your GitHub (or another remote git service) package.
+5. Update remote `origin` to your GitHub (or another remote git service) package.
 I usually just write this commands
     - `git remote remove origin`
     - `git remote add origin <paste your link here>`
