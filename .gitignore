@@ -1,0 +1,9 @@
+# Core for CMake auto-generated files
+/out
+bin/
+build/
+/.vs
+.idea/
+
+# Optional (I recommend disable)
+#CMakeSettings.json
