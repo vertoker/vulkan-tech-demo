@@ -5,5 +5,8 @@ build/
 /.vs
 .idea/
 
+# Files
+*.pdb
+
 # Optional (I recommend disable)
 #CMakeSettings.json
