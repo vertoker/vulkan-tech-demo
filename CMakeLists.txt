@@ -1,7 +1,7 @@
 # Core CMake
 
 cmake_minimum_required(VERSION 3.12)
-project(executable) # Your project name here
+project(vulkan-tech-demo) # Your project name here
 set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
@@ -10,11 +10,11 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 # Sources
 
 # Use it if you're normal
-#add_executable(executable "src/main.cpp")
+#add_executable(vulkan-tech-demo "src/main.cpp")
 
 # Use it if you're crazy
 file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
-add_executable(executable ${SOURCES})
+add_executable(vulkan-tech-demo ${SOURCES})
 
 # Resources (feature)
 
