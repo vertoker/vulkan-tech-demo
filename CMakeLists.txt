@@ -1,13 +1,18 @@
+#--------------------------------------------------------------------
 # Core CMake
+#--------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.12)
-project(vulkan-tech-demo) # Your project name here
+project(vulkan-tech-demo VERSION 1.0 LANGUAGES CXX) # Your project name here
 set(CMAKE_CXX_STANDARD 20)
 
+get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+#--------------------------------------------------------------------
 # Sources
+#--------------------------------------------------------------------
 
 # Use it if you're normal
 #add_executable(vulkan-tech-demo "src/main.cpp")
@@ -16,14 +21,18 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
 add_executable(vulkan-tech-demo ${SOURCES})
 
+#--------------------------------------------------------------------
 # Resources (feature)
+#--------------------------------------------------------------------
 
 # Use it in development
 target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 # Use it in build
 #target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 
+#--------------------------------------------------------------------
 # Libraries
+#--------------------------------------------------------------------
 
 # Include folder in directory (etc. combine folders)
 target_include_directories("${CMAKE_PROJECT_NAME}" PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/")
@@ -37,3 +46,15 @@ add_subdirectory("lib/Vulkan-Loader")
 # Add your libraries in a row through
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw)
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE Vulkan::Headers Vulkan::Loader)
+
+#--------------------------------------------------------------------
+# Utility
+#--------------------------------------------------------------------
+
+# Disable console
+# If you use VS compiler
+if(MSVC) # If using the VS compiler...
+	target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
+	set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+endif()
+# For others idk how to solve this, search through the internet or something
