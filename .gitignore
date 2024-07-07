@@ -10,7 +10,7 @@ build/
 *.spv
 
 # Build
-resources/ShaderCache
+/resources/ShaderCache
 
 # Optional (I recommend disable)
 #CMakeSettings.json
