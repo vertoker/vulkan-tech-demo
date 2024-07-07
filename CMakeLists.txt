@@ -18,7 +18,8 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 #add_executable(vulkan-tech-demo "src/main.cpp")
 
 # Use it if you're crazy
-file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS "src/*.h" "src/*.cpp")
+file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS 
+	"src/*.h" "src/*.c" "src/*.hpp" "src/*.cpp")
 add_executable(vulkan-tech-demo ${SOURCES})
 
 #--------------------------------------------------------------------
