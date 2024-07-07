@@ -7,6 +7,10 @@ build/
 
 # Files
 *.pdb
+*.spv
+
+# Build
+resources/ShaderCache
 
 # Optional (I recommend disable)
 #CMakeSettings.json
