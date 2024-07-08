@@ -10,6 +10,8 @@ get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+set(DISABLE_CONSOLE 1)
+
 #--------------------------------------------------------------------
 # Sources
 #--------------------------------------------------------------------
@@ -53,9 +55,10 @@ target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE Vulkan::Headers Vulkan::Lo
 #--------------------------------------------------------------------
 
 # Disable console
-# If you use VS compiler
-if(MSVC) # If using the VS compiler...
-	target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
-	set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+if (DISABLE_CONSOLE)
+	if(MSVC) # If using the VS compiler...
+		target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC _CRT_SECURE_NO_WARNINGS)
+		set_target_properties("${CMAKE_PROJECT_NAME}" PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /ENTRY:mainCRTStartup")
+	endif()
+	# For others idk how to solve this, search through the internet or something
 endif()
-# For others idk how to solve this, search through the internet or something

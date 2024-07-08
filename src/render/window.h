@@ -7,7 +7,7 @@
 
 class VulkanWindow {
 public:
-	VulkanWindow(const int w, const int h, const char* name);
+	VulkanWindow(const int& w, const int& h, const std::string& name);
 	~VulkanWindow();
 
 	// Copy condition for only one GLFWwindow
@@ -19,7 +19,7 @@ public:
 private:
 	int width;
 	int height;
-	const char* windowName;
+	std::string windowName;
 
 	GLFWwindow* window;
 };

@@ -1,25 +1,26 @@
 #pragma once
 
 #include "render/window.h"
+#include "render/pipeline.h"
+
+struct VulkanAppSettings {
+public:
+	int Width = 800;
+	int Height = 600;
+	std::string Name = "vulkan tech demo";
+
+	std::string VertShaderPath;
+	std::string FragShaderPath;
+};
 
 class VulkanApp {
 public:
-	static constexpr int WIDTH = 800;
-	static constexpr int HEIGHT = 600;
-	static constexpr const char* NAME = "vulkan tech demo";
+	VulkanApp(const VulkanAppSettings& settings);
+	~VulkanApp();
 
-	void run() {
-		init();
-		while (!this->window.shouldClose()) {
-			loop();
-		}
-		cleanup();
-	}
+	void run();
 
 private:
-	VulkanWindow window{ WIDTH, HEIGHT, NAME };
-
-	void init();
-	void loop();
-	void cleanup();
+	VulkanWindow* window;
+	VulkanPipeline* pipeline;
 };

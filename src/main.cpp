@@ -6,8 +6,14 @@
 #include <iostream>
 #include <stdexcept>
 
+constexpr auto HIDE_CONSOLE = 1;
+
 int main() {
-    VulkanApp app{};
+    VulkanAppSettings appSettings {};
+    appSettings.VertShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.vert.spv");
+    appSettings.FragShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.frag.spv");
+
+    VulkanApp app{ appSettings };
 
     try {
         app.run();

@@ -1,14 +1,20 @@
 #include "app.h"
 
-void VulkanApp::init()
+VulkanApp::VulkanApp(const VulkanAppSettings& settings)
 {
+	window = new VulkanWindow(settings.Width, settings.Height, settings.Name);
+	pipeline = new VulkanPipeline(settings.VertShaderPath, settings.FragShaderPath);
 }
 
-void VulkanApp::loop()
+VulkanApp::~VulkanApp()
 {
-    glfwPollEvents();
+	delete window;
+	delete pipeline;
 }
 
-void VulkanApp::cleanup()
+void VulkanApp::run()
 {
+	while (!window->shouldClose()) {
+		glfwPollEvents();
+	}
 }
