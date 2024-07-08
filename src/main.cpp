@@ -1,5 +1,6 @@
 
 #include "app.h"
+#include "utility/log.h"
 
 // std
 #include <cstdlib>
@@ -9,6 +10,8 @@
 constexpr auto HIDE_CONSOLE = 1;
 
 int main() {
+    Log("Start app");
+
     VulkanAppSettings appSettings {};
     appSettings.VertShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.vert.spv");
     appSettings.FragShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.frag.spv");
@@ -23,5 +26,6 @@ int main() {
         return EXIT_FAILURE;
     }
 
+    Log("Stop app");
     return EXIT_SUCCESS;
 }

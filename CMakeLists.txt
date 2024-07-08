@@ -10,7 +10,7 @@ get_directory_property(IS_SUBPROJECT PARENT_DIRECTORY)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
-set(DISABLE_CONSOLE 1)
+set(DISABLE_CONSOLE 0)
 
 #--------------------------------------------------------------------
 # Sources
