@@ -6,8 +6,27 @@
 #include <string>
 #include <vector>
 
+// Config for all configurable parts of GPU pipeline
 struct PipelineConfigInfo {
+	// Input pipeline stage config
+	VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
+	// Viewport for rendering
+	VkViewport viewport;
+	VkRect2D scissor;
+	VkPipelineViewportStateCreateInfo viewportInfo;
+	// Rasteriazation pipeline stage config
+	VkPipelineRasterizationStateCreateInfo rasterizationInfo;
+	// MSAA technology config
+	VkPipelineMultisampleStateCreateInfo multisampleInfo;
+	// Color blending pipeline stage config
+	VkPipelineColorBlendAttachmentState colorBlendAttachment;
+	VkPipelineColorBlendStateCreateInfo colorBlendInfo;
 
+	VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+
+	VkPipelineLayout pipelineLayout = nullptr;
+	VkRenderPass renderPass = nullptr;
+	uint32_t subpass = 0;
 };
 
 class VulkanPipeline {
