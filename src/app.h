@@ -5,12 +5,14 @@
 
 struct VulkanAppSettings {
 public:
-	int Width = 800;
-	int Height = 600;
-	std::string Name = "vulkan tech demo";
+	int screenWidth = 800;
+	int screenHeight = 600;
+	std::string name = "vulkan tech demo";
 
-	std::string VertShaderPath;
-	std::string FragShaderPath;
+	std::string vertShaderPath;
+	std::string fragShaderPath;
+
+	PipelineConfigInfo pipelineInfo;
 };
 
 class VulkanApp {
@@ -23,4 +25,5 @@ public:
 private:
 	VulkanWindow* window;
 	VulkanPipeline* pipeline;
+	VulkanDevice* device;
 };

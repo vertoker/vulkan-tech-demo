@@ -8,46 +8,40 @@
 #include <set>
 #include <unordered_set>
 
-// local callback functions
+// debugging layer from inside Vulkan
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-    void* pUserData) {
+    void* pUserData)
+{
     std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
-
     return VK_FALSE;
 }
-
 VkResult CreateDebugUtilsMessengerEXT(
     VkInstance instance,
     const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
     const VkAllocationCallbacks* pAllocator,
-    VkDebugUtilsMessengerEXT* pDebugMessenger) {
-    auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-        instance,
-        "vkCreateDebugUtilsMessengerEXT");
-    if (func != nullptr) {
+    VkDebugUtilsMessengerEXT* pDebugMessenger)
+{
+    auto func = (PFN_vkCreateDebugUtilsMessengerEXT)
+        vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (func != nullptr)
         return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
-    }
-    else {
-        return VK_ERROR_EXTENSION_NOT_PRESENT;
-    }
+    else return VK_ERROR_EXTENSION_NOT_PRESENT;
 }
-
-void DestroyDebugUtilsMessengerEXT(
-    VkInstance instance,
+void DestroyDebugUtilsMessengerEXT(VkInstance instance,
     VkDebugUtilsMessengerEXT debugMessenger,
-    const VkAllocationCallbacks* pAllocator) {
-    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
-        instance,
-        "vkDestroyDebugUtilsMessengerEXT");
+    const VkAllocationCallbacks* pAllocator)
+{
+    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)
+        vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
     if (func != nullptr) {
         func(instance, debugMessenger, pAllocator);
     }
 }
 
-// class member functions
+// constructor, start point for Vulkan API
 VulkanDevice::VulkanDevice(VulkanWindow& window) : window{ window } {
     createInstance();
     setupDebugMessenger();
@@ -56,7 +50,7 @@ VulkanDevice::VulkanDevice(VulkanWindow& window) : window{ window } {
     createLogicalDevice();
     createCommandPool();
 }
-
+// destructor, mostly for Vulkan structures
 VulkanDevice::~VulkanDevice() {
     vkDestroyCommandPool(device_, commandPool, nullptr);
     vkDestroyDevice(device_, nullptr);
