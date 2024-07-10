@@ -5,6 +5,7 @@
 // std
 #include <array>
 #include <cstdlib>
+#include <cassert>
 #include <cstring>
 #include <iostream>
 #include <limits>
@@ -12,7 +13,9 @@
 #include <stdexcept>
 
 VulkanSwapChain::VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D extent)
-    : device{ deviceRef }, windowExtent{ extent } {
+    : device{ deviceRef }, windowExtent{ extent }
+{
+    std::cout << std::endl << "VulkanSwapChain" << std::endl;
     createSwapChain();
     createImageViews();
     createRenderPass();
@@ -21,10 +24,10 @@ VulkanSwapChain::VulkanSwapChain(VulkanDevice& deviceRef, VkExtent2D extent)
     createSyncObjects();
 }
 
-VulkanSwapChain::~VulkanSwapChain() {
-    for (auto imageView : swapChainImageViews) {
+VulkanSwapChain::~VulkanSwapChain()
+{
+    for (auto imageView : swapChainImageViews)
         vkDestroyImageView(device.device(), imageView, nullptr);
-    }
     swapChainImageViews.clear();
 
     if (swapChain != nullptr) {
@@ -52,30 +55,21 @@ VulkanSwapChain::~VulkanSwapChain() {
     }
 }
 
-VkResult VulkanSwapChain::acquireNextImage(uint32_t* imageIndex) {
-    vkWaitForFences(
-        device.device(),
-        1,
-        &inFlightFences[currentFrame],
-        VK_TRUE,
-        std::numeric_limits<uint64_t>::max());
+VkResult VulkanSwapChain::acquireNextImage(uint32_t* imageIndex)
+{
+    vkWaitForFences(device.device(), 1, &inFlightFences[currentFrame], VK_TRUE, UINT64_MAX);
 
     VkResult result = vkAcquireNextImageKHR(
-        device.device(),
-        swapChain,
-        std::numeric_limits<uint64_t>::max(),
+        device.device(), swapChain, UINT64_MAX,
         imageAvailableSemaphores[currentFrame],  // must be a not signaled semaphore
-        VK_NULL_HANDLE,
-        imageIndex);
+        VK_NULL_HANDLE, imageIndex);
 
     return result;
 }
-
-VkResult VulkanSwapChain::submitCommandBuffers(
-    const VkCommandBuffer* buffers, uint32_t* imageIndex) {
-    if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE) {
+VkResult VulkanSwapChain::submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex)
+{
+    if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE)
         vkWaitForFences(device.device(), 1, &imagesInFlight[*imageIndex], VK_TRUE, UINT64_MAX);
-    }
     imagesInFlight[*imageIndex] = inFlightFences[currentFrame];
 
     VkSubmitInfo submitInfo = {};
@@ -95,10 +89,8 @@ VkResult VulkanSwapChain::submitCommandBuffers(
     submitInfo.pSignalSemaphores = signalSemaphores;
 
     vkResetFences(device.device(), 1, &inFlightFences[currentFrame]);
-    if (vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) !=
-        VK_SUCCESS) {
+    if (vkQueueSubmit(device.graphicsQueue(), 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS)
         throw std::runtime_error("failed to submit draw command buffer!");
-    }
 
     VkPresentInfoKHR presentInfo = {};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
@@ -126,11 +118,15 @@ void VulkanSwapChain::createSwapChain() {
     VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
     VkExtent2D extent = chooseSwapExtent(swapChainSupport.capabilities);
 
-    uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+    std::cout << "Min image count: " << swapChainSupport.capabilities.minImageCount << std::endl;
+    std::cout << "Max image count: " << swapChainSupport.capabilities.maxImageCount << std::endl;
+
+    uint32_t imageCount = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
     if (swapChainSupport.capabilities.maxImageCount > 0 &&
         imageCount > swapChainSupport.capabilities.maxImageCount) {
         imageCount = swapChainSupport.capabilities.maxImageCount;
     }
+    std::cout << "Current image count: " << imageCount << std::endl;
 
     VkSwapchainCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

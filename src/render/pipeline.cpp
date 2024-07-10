@@ -73,17 +73,30 @@ void VulkanPipeline::createGraphicsPipeline(
 	viewportInfo.scissorCount = 1;
 	viewportInfo.pScissors = &configInfo.scissor;
 
-	VkGraphicsPipelineCreateInfo pipelineInfo {};
+	VkGraphicsPipelineCreateInfo pipelineInfo{};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipelineInfo.stageCount = 2;
 	pipelineInfo.pStages = shaderStages;
+
+	VkPipelineColorBlendStateCreateInfo colorBlendInfo{};
+	// Color Blending stage config
+	colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	colorBlendInfo.attachmentCount = 1;
+	colorBlendInfo.pAttachments = &configInfo.colorBlendAttachment;
+	// Optional
+	colorBlendInfo.logicOpEnable = VK_FALSE;
+	colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;
+	colorBlendInfo.blendConstants[0] = 0.0f;
+	colorBlendInfo.blendConstants[1] = 0.0f;
+	colorBlendInfo.blendConstants[2] = 0.0f;
+	colorBlendInfo.blendConstants[3] = 0.0f;
 
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
 	pipelineInfo.pViewportState = &viewportInfo;
 	pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
 	pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
-	pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
+	pipelineInfo.pColorBlendState = &colorBlendInfo;
 	pipelineInfo.pDepthStencilState = &configInfo.depthStencilInfo;
 	pipelineInfo.pDynamicState = nullptr;
 
@@ -168,18 +181,6 @@ PipelineConfigInfo VulkanPipeline::defaultConfigInfo(uint32_t width, uint32_t he
 	configInfo.colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
 	configInfo.colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
 	configInfo.colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
-
-	// Color Blending stage config
-	configInfo.colorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-	configInfo.colorBlendInfo.attachmentCount = 1;
-	configInfo.colorBlendInfo.pAttachments = &configInfo.colorBlendAttachment;
-	// Optional
-	configInfo.colorBlendInfo.logicOpEnable = VK_FALSE;
-	configInfo.colorBlendInfo.logicOp = VK_LOGIC_OP_COPY;
-	configInfo.colorBlendInfo.blendConstants[0] = 0.0f;
-	configInfo.colorBlendInfo.blendConstants[1] = 0.0f;
-	configInfo.colorBlendInfo.blendConstants[2] = 0.0f;
-	configInfo.colorBlendInfo.blendConstants[3] = 0.0f;
 
 	configInfo.depthStencilInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
 	configInfo.depthStencilInfo.depthTestEnable = VK_TRUE;

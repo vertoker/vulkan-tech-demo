@@ -23,6 +23,8 @@ void VulkanApp::run()
 		glfwPollEvents();
 		drawFrame();
 	}
+	// Fix errors while dispose Vulkan
+	vkDeviceWaitIdle(device->device());
 }
 
 void VulkanApp::createPipelineLayout()

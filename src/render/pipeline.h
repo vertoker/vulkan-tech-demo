@@ -19,7 +19,6 @@ struct PipelineConfigInfo {
 	VkPipelineMultisampleStateCreateInfo multisampleInfo;
 	// Color blending pipeline stage config
 	VkPipelineColorBlendAttachmentState colorBlendAttachment;
-	VkPipelineColorBlendStateCreateInfo colorBlendInfo;
 
 	VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
 

@@ -63,3 +63,6 @@ if (DISABLE_CONSOLE)
 	endif()
 	# For others idk how to solve this, search through the internet or something
 endif()
+
+# Run .bat file for shader recompiling
+#execute_process(COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/CompileShaders.bat")

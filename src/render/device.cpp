@@ -15,7 +15,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData)
 {
-    std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
+    std::cerr << "[VALIDATION LAYER]: " << pCallbackData->pMessage << std::endl;
     return VK_FALSE;
 }
 VkResult CreateDebugUtilsMessengerEXT(
@@ -43,6 +43,7 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance,
 
 // constructor, start point for Vulkan API
 VulkanDevice::VulkanDevice(VulkanWindow& window) : window{ window } {
+    std::cout << std::endl << "VulkanDevice" << std::endl;
     createInstance();
     setupDebugMessenger();
     createSurface();
@@ -92,16 +93,18 @@ void VulkanDevice::createInstance() {
 
         populateDebugMessengerCreateInfo(debugCreateInfo);
         createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
+        std::cout << "Create validation layer" << std::endl;
     }
     else {
         createInfo.enabledLayerCount = 0;
         createInfo.pNext = nullptr;
     }
 
-    if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create instance!");
-    }
-
+    if (vkCreateInstance(&createInfo, nullptr, &instance) == VK_SUCCESS)
+        std::cout << "VkInstance created: appname=\"" << appInfo.pApplicationName 
+        << "\" engine name=\"" << appInfo.pEngineName << "\"" << std::endl;
+    else throw std::runtime_error("failed to create instance!");
+    
     hasGflwRequiredInstanceExtensions();
 }
 
@@ -127,7 +130,7 @@ void VulkanDevice::pickPhysicalDevice() {
     }
 
     vkGetPhysicalDeviceProperties(physicalDevice, &properties);
-    std::cout << "physical device: " << properties.deviceName << std::endl;
+    std::cout << "Physical device: " << properties.deviceName << std::endl;
 }
 
 void VulkanDevice::createLogicalDevice() {
@@ -169,12 +172,14 @@ void VulkanDevice::createLogicalDevice() {
         createInfo.enabledLayerCount = 0;
     }
 
-    if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device_) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create logical device!");
-    }
-
+    if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device_) == VK_SUCCESS)
+        std::cout << "Extensions count: " << createInfo.enabledExtensionCount << std::endl;
+    else throw std::runtime_error("failed to create logical device!");
+    
     vkGetDeviceQueue(device_, indices.graphicsFamily, 0, &graphicsQueue_);
     vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
+    std::cout << "Device index: graphics family: " << indices.graphicsFamily << std::endl;
+    std::cout << "Device index: present family: " << indices.presentFamily << std::endl;
 }
 
 void VulkanDevice::createCommandPool() {
@@ -186,9 +191,8 @@ void VulkanDevice::createCommandPool() {
     poolInfo.flags =
         VK_COMMAND_POOL_CREATE_TRANSIENT_BIT | VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-    if (vkCreateCommandPool(device_, &poolInfo, nullptr, &commandPool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(device_, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
         throw std::runtime_error("failed to create command pool!");
-    }
 }
 
 void VulkanDevice::createSurface() { window.createWindowSurface(instance, &surface_); }
@@ -278,14 +282,14 @@ void VulkanDevice::hasGflwRequiredInstanceExtensions() {
     std::vector<VkExtensionProperties> extensions(extensionCount);
     vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data());
 
-    std::cout << "available extensions:" << std::endl;
+    std::cout << "Available extensions: " << std::endl;
     std::unordered_set<std::string> available;
     for (const auto& extension : extensions) {
         std::cout << "\t" << extension.extensionName << std::endl;
         available.insert(extension.extensionName);
     }
 
-    std::cout << "required extensions:" << std::endl;
+    std::cout << "Required extensions: " << std::endl;
     auto requiredExtensions = getRequiredExtensions();
     for (const auto& required : requiredExtensions) {
         std::cout << "\t" << required << std::endl;
