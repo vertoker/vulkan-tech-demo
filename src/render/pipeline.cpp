@@ -64,6 +64,15 @@ void VulkanPipeline::createGraphicsPipeline(
 	vertexInputInfo.vertexBindingDescriptionCount = 0;
 	vertexInputInfo.pVertexBindingDescriptions = nullptr;
 
+	// General info config for viewport, which tells where on screen render image
+	// Created here for fix potencial copy ellision
+	VkPipelineViewportStateCreateInfo viewportInfo{};
+	viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+	viewportInfo.viewportCount = 1;
+	viewportInfo.pViewports = &configInfo.viewport;
+	viewportInfo.scissorCount = 1;
+	viewportInfo.pScissors = &configInfo.scissor;
+
 	VkGraphicsPipelineCreateInfo pipelineInfo {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipelineInfo.stageCount = 2;
@@ -71,7 +80,7 @@ void VulkanPipeline::createGraphicsPipeline(
 
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &configInfo.inputAssemblyInfo;
-	pipelineInfo.pViewportState = &configInfo.viewportInfo;
+	pipelineInfo.pViewportState = &viewportInfo;
 	pipelineInfo.pRasterizationState = &configInfo.rasterizationInfo;
 	pipelineInfo.pMultisampleState = &configInfo.multisampleInfo;
 	pipelineInfo.pColorBlendState = &configInfo.colorBlendInfo;
@@ -113,13 +122,6 @@ PipelineConfigInfo VulkanPipeline::defaultConfigInfo(uint32_t width, uint32_t he
 	// Cutter for image, render only configured rect of screen (screen pos)
 	configInfo.scissor.offset = { 0, 0 };
 	configInfo.scissor.extent = { width, height };
-
-	// General info config for viewport, which tells where on screen render image
-	configInfo.viewportInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
-	configInfo.viewportInfo.viewportCount = 1;
-	configInfo.viewportInfo.pViewports = &configInfo.viewport;
-	configInfo.viewportInfo.scissorCount = 1;
-	configInfo.viewportInfo.pScissors = &configInfo.scissor;
 	
 	// Settings for Vulkan of how it must convert vertex data to pixels in screen
 	configInfo.rasterizationInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;

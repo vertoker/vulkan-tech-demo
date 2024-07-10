@@ -2,6 +2,7 @@
 
 #include "render/window.h"
 #include "render/pipeline.h"
+#include "render/swapchain.h"
 
 struct VulkanAppSettings {
 public:
@@ -24,6 +25,7 @@ public:
 
 private:
 	VulkanWindow* window;
-	VulkanPipeline* pipeline;
 	VulkanDevice* device;
+	VulkanSwapChain* swapChain;
+	VulkanPipeline* pipeline;
 };

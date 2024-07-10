@@ -13,7 +13,6 @@ struct PipelineConfigInfo {
 	// Viewport for rendering
 	VkViewport viewport;
 	VkRect2D scissor;
-	VkPipelineViewportStateCreateInfo viewportInfo;
 	// Rasteriazation pipeline stage config
 	VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 	// MSAA technology config
