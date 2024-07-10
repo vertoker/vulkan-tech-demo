@@ -73,7 +73,7 @@ void VulkanApp::createCommandBuffers()
 		VkRenderPassBeginInfo renderPassInfo{};
 		renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 		renderPassInfo.renderPass = swapChain->getRenderPass();
-		renderPassInfo.framebuffer = swapChain->getFrameBuffer(1);
+		renderPassInfo.framebuffer = swapChain->getFrameBuffer(i);
 
 		renderPassInfo.renderArea.offset = { 0, 0 };
 		renderPassInfo.renderArea.extent = swapChain->getSwapChainExtent();
