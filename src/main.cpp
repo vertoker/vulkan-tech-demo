@@ -10,12 +10,9 @@
 VulkanAppSettings createAppSettings() {
     VulkanAppSettings appSettings{};
 
-    PipelineConfigInfo pipelineInfo{};
-
     appSettings.vertShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.vert.spv");
     appSettings.fragShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.frag.spv");
 
-    appSettings.pipelineInfo = VulkanPipeline::defaultConfigInfo(appSettings.screenWidth, appSettings.screenHeight);
     return appSettings;
 }
 

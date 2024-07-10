@@ -4,6 +4,11 @@
 #include "render/pipeline.h"
 #include "render/swapchain.h"
 
+// std
+#include <iostream>
+#include <memory>
+#include <vector>
+
 struct VulkanAppSettings {
 public:
 	int screenWidth = 800;
@@ -12,20 +17,29 @@ public:
 
 	std::string vertShaderPath;
 	std::string fragShaderPath;
-
-	PipelineConfigInfo pipelineInfo;
 };
 
 class VulkanApp {
 public:
-	VulkanApp(const VulkanAppSettings& settings);
+	VulkanApp(VulkanAppSettings& settings);
 	~VulkanApp();
+
+	VulkanApp(const VulkanApp&) = delete;
+	VulkanApp& operator=(const VulkanApp&) = delete;
 
 	void run();
 
 private:
-	VulkanWindow* window;
-	VulkanDevice* device;
-	VulkanSwapChain* swapChain;
-	VulkanPipeline* pipeline;
+	void createPipelineLayout();
+	void createPipeline(VulkanAppSettings& settings);
+	void createCommandBuffers();
+	void drawFrame();
+
+	std::unique_ptr<VulkanWindow> window;
+	std::unique_ptr<VulkanDevice> device;
+	std::unique_ptr<VulkanSwapChain> swapChain;
+	std::unique_ptr<VulkanPipeline> pipeline;
+
+	VkPipelineLayout pipelineLayout;
+	std::vector<VkCommandBuffer> commandBuffers;
 };
