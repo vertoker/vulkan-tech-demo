@@ -40,6 +40,8 @@ public:
 	VulkanPipeline(const VulkanPipeline&) = delete;
 	void operator=(const VulkanPipeline&) = delete;
 
+	void bind(VkCommandBuffer commandBuffer);
+
 	static PipelineConfigInfo defaultConfigInfo(uint32_t width, uint32_t height);
 
 private:

@@ -98,6 +98,11 @@ void VulkanPipeline::createGraphicsPipeline(
 		throw std::runtime_error("failed to create graphics pipeline");
 }
 
+void VulkanPipeline::bind(VkCommandBuffer commandBuffer)
+{
+	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+}
+
 PipelineConfigInfo VulkanPipeline::defaultConfigInfo(uint32_t width, uint32_t height)
 {
 	PipelineConfigInfo configInfo{};
