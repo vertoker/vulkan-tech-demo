@@ -411,7 +411,8 @@ void VulkanDevice::createBuffer(
     VkBufferUsageFlags usage,
     VkMemoryPropertyFlags properties,
     VkBuffer& buffer,
-    VkDeviceMemory& bufferMemory) {
+    VkDeviceMemory& bufferMemory)
+{
     VkBufferCreateInfo bufferInfo{};
     bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
     bufferInfo.size = size;
