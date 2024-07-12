@@ -3,6 +3,7 @@
 #include "render/window.h"
 #include "render/pipeline.h"
 #include "render/swapchain.h"
+#include "render/model.h"
 
 // std
 #include <iostream>
@@ -30,6 +31,7 @@ public:
 	void run();
 
 private:
+	void loadModels();
 	void createPipelineLayout();
 	void createPipeline(VulkanAppSettings& settings);
 	void createCommandBuffers();
@@ -42,4 +44,6 @@ private:
 
 	VkPipelineLayout pipelineLayout;
 	std::vector<VkCommandBuffer> commandBuffers;
+
+	std::unique_ptr<VulkanModel> testModel;
 };

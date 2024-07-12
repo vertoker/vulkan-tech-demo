@@ -8,6 +8,7 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 	device = std::make_unique<VulkanDevice>(*window);
 	swapChain = std::make_unique<VulkanSwapChain>(*device, window->getExtent());
 
+	loadModels();
 	createPipelineLayout();
 	createPipeline(settings);
 	createCommandBuffers();
@@ -25,6 +26,16 @@ void VulkanApp::run()
 	}
 	// Fix errors while dispose Vulkan
 	vkDeviceWaitIdle(device->device());
+}
+
+void VulkanApp::loadModels()
+{
+	std::vector<VulkanModel::Vertex> vertices {
+		{ { 0.0f, -0.5f } },
+		{ { 0.5f, 0.5f } },
+		{ { -0.5f, 0.5f } }
+	};
+	testModel = std::make_unique<VulkanModel>(*device, vertices);
 }
 
 void VulkanApp::createPipelineLayout()
@@ -88,8 +99,9 @@ void VulkanApp::createCommandBuffers()
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
 		pipeline->bind(commandBuffers[i]);
-		// Can be used for drawing instances
-		vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+
+		testModel->bind(commandBuffers[i]);
+		testModel->draw(commandBuffers[i]);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 		

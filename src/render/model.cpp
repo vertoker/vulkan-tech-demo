@@ -34,8 +34,6 @@ void VulkanModel::createVertexBuffers(const std::vector<Vertex>& vertices)
 	memcpy(data, vertices.data(), static_cast<size_t>(bufferSize));
 	// Unbind pointer from CPU buffer in Vulkan
 	vkUnmapMemory(device.device(), vertexBufferMemory);
-	// Clear memory
-	delete data;
 }
 
 void VulkanModel::bind(VkCommandBuffer commandBuffer)

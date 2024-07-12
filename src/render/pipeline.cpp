@@ -1,4 +1,5 @@
 #include "pipeline.h"
+#include "model.h"
 
 // std
 #include <cassert>
@@ -57,12 +58,15 @@ void VulkanPipeline::createGraphicsPipeline(
 	shaderStages[1].flags = 0;
 	shaderStages[1].pSpecializationInfo = nullptr;
 
+	auto attributeDescriptions = VulkanModel::Vertex::getAttributeDescriptions();
+	auto bindingDescriptions = VulkanModel::Vertex::getBindingDescriptions();
+
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertexInputInfo.vertexAttributeDescriptionCount = 0;
-	vertexInputInfo.pVertexAttributeDescriptions = nullptr;
-	vertexInputInfo.vertexBindingDescriptionCount = 0;
-	vertexInputInfo.pVertexBindingDescriptions = nullptr;
+	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size());
+	vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescriptions.size());
+	vertexInputInfo.pVertexAttributeDescriptions = attributeDescriptions.data();
+	vertexInputInfo.pVertexBindingDescriptions = bindingDescriptions.data();
 
 	// General info config for viewport, which tells where on screen render image
 	// Created here for fix potencial copy ellision
