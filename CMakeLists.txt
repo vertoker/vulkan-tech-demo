@@ -65,6 +65,6 @@ if (DISABLE_CONSOLE)
 endif()
 
 # Run .bat file for shader recompiling
-#execute_process(COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/CompileShaders.bat")
+execute_process(COMMAND "${CMAKE_PROJECT_NAME}/CompileShaders.bat")
 #add_custom_command(TARGET CompileShadersTarget POST_BUILD COMMAND cmd //C CompileShaders.bat)
 #add_dependencies();

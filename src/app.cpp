@@ -31,9 +31,9 @@ void VulkanApp::run()
 void VulkanApp::loadModels()
 {
 	std::vector<VulkanModel::Vertex> vertices {
-		{ { 0.0f, -0.5f } },
-		{ { 0.5f, 0.5f } },
-		{ { -0.5f, 0.5f } }
+		{ { 0.0f, -0.5f }, { 1.0f, 0.0f, 0.0f } },
+		{ { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
+		{ { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
 	};
 	testModel = std::make_unique<VulkanModel>(*device, vertices);
 }

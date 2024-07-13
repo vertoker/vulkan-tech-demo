@@ -25,6 +25,8 @@ void VulkanModel::createVertexBuffers(const std::vector<Vertex>& vertices)
 		vertexBuffer, vertexBufferMemory
 	);
 
+	// Implementation is interleaved, or just in single buffer
+
 	// Create abstract pointer
 	void* data;
 	// Bind pointer to the CPU buffer in Vulkan
@@ -60,12 +62,19 @@ std::vector<VkVertexInputBindingDescription> VulkanModel::Vertex::getBindingDesc
 }
 std::vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::getAttributeDescriptions()
 {
-	std::vector<VkVertexInputAttributeDescription> attribureDescriptions(1);
+	std::vector<VkVertexInputAttributeDescription> attribureDescriptions(2);
 
-	attribureDescriptions[0].binding = 0;
+	// For position
 	attribureDescriptions[0].location = 0;
+	attribureDescriptions[0].binding = 0;
 	attribureDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
-	attribureDescriptions[0].offset = 0;
+	attribureDescriptions[0].offset = offsetof(Vertex, position);
+
+	// For color
+	attribureDescriptions[1].location = 1;
+	attribureDescriptions[1].binding = 0;
+	attribureDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+	attribureDescriptions[1].offset = offsetof(Vertex, color);
 
 	return attribureDescriptions;
 }
