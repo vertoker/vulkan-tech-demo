@@ -25,6 +25,7 @@ public:
 	VulkanApp(VulkanAppSettings& settings);
 	~VulkanApp();
 
+	VulkanApp() = default;
 	VulkanApp(const VulkanApp&) = delete;
 	VulkanApp& operator=(const VulkanApp&) = delete;
 
@@ -33,15 +34,20 @@ public:
 private:
 	void loadModels();
 	void createPipelineLayout();
-	void createPipeline(VulkanAppSettings& settings);
+	void createPipeline();
 	void createCommandBuffers();
 	void drawFrame();
 
-	std::unique_ptr<VulkanWindow> window;
-	std::unique_ptr<VulkanDevice> device;
-	std::unique_ptr<VulkanSwapChain> swapChain;
-	std::unique_ptr<VulkanPipeline> pipeline;
+	void recreateSwapChain();
+	void recordCommandBuffer(int imageIndex);
 
+	std::unique_ptr<VulkanWindow> window;
+	VulkanSwapChain* swapChain = nullptr;
+
+	std::unique_ptr<VulkanDevice> device;
+
+	std::unique_ptr<VulkanPipeline> pipeline;
+	std::string vertShaderPath, fragShaderPath;
 	VkPipelineLayout pipelineLayout;
 	std::vector<VkCommandBuffer> commandBuffers;
 

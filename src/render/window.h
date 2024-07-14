@@ -15,6 +15,8 @@ public:
 	VulkanWindow& operator = (const VulkanWindow&) = delete;
 
 	bool shouldClose() { return glfwWindowShouldClose(window); }
+	bool wasWindowResized() { return framebufferResized; }
+	void resetWindowResizedFlag() { framebufferResized = false; }
 
 	VkExtent2D getExtent() 
 	{
@@ -27,8 +29,13 @@ public:
 	void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 private:
+	static void framebufferResizeCallback(GLFWwindow *window, int width, int height);
+	void initWindow();
+
 	int width;
 	int height;
+	bool framebufferResized = false;
+
 	std::string windowName;
 
 	GLFWwindow* window;

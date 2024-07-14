@@ -19,7 +19,7 @@ public:
     ~VulkanSwapChain();
 
     VulkanSwapChain(const VulkanSwapChain&) = delete;
-    void operator=(const VulkanSwapChain&) = delete;
+    VulkanSwapChain& operator=(const VulkanSwapChain&) = delete;
 
     VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
     VkRenderPass getRenderPass() { return renderPass; }
