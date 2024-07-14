@@ -11,8 +11,7 @@ struct PipelineConfigInfo {
 	// Input pipeline stage config
 	VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 	// Viewport for rendering
-	VkViewport viewport;
-	VkRect2D scissor;
+	VkPipelineViewportStateCreateInfo viewportInfo;
 	// Rasteriazation pipeline stage config
 	VkPipelineRasterizationStateCreateInfo rasterizationInfo;
 	// MSAA technology config
@@ -21,6 +20,9 @@ struct PipelineConfigInfo {
 	VkPipelineColorBlendAttachmentState colorBlendAttachment;
 
 	VkPipelineDepthStencilStateCreateInfo depthStencilInfo;
+
+	std::vector<VkDynamicState> dynamicStateEnables;
+	VkPipelineDynamicStateCreateInfo dynamicStateInfo;
 
 	VkPipelineLayout pipelineLayout = nullptr;
 	VkRenderPass renderPass = nullptr;
@@ -42,7 +44,7 @@ public:
 
 	void bind(VkCommandBuffer commandBuffer);
 
-	static PipelineConfigInfo defaultConfigInfo(uint32_t width, uint32_t height);
+	static void defaultConfigInfo(PipelineConfigInfo& configInfo);
 
 private:
 	VulkanDevice& device;

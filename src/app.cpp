@@ -58,7 +58,8 @@ void VulkanApp::createPipelineLayout()
 
 void VulkanApp::createPipeline()
 {
-	auto pipelineInfo = VulkanPipeline::defaultConfigInfo(swapChain->width(), swapChain->height());
+	PipelineConfigInfo pipelineInfo{};
+	VulkanPipeline::defaultConfigInfo(pipelineInfo);
 	pipelineInfo.renderPass = swapChain->getRenderPass();
 	pipelineInfo.pipelineLayout = pipelineLayout;
 
@@ -146,10 +147,29 @@ void VulkanApp::recordCommandBuffer(int imageIndex)
 	renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
 	renderPassInfo.pClearValues = clearValues.data();
 
+	// Render pass - list of commands for GPU
 	vkCmdBeginRenderPass(commandBuffers[imageIndex], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
+	// Dynamic viewport
+	VkViewport viewport{};
+	viewport.x = 0.0f;
+	viewport.y = 0.0f;
+	auto extent = swapChain->getSwapChainExtent();
+	viewport.width = static_cast<float>(extent.width);
+	viewport.height = static_cast<float>(extent.height);
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+	VkRect2D scissor{};
+	scissor.offset = {0, 0};
+	scissor.extent = extent;
+
+	vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
+	vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
+
+	// Core
 	pipeline->bind(commandBuffers[imageIndex]);
 
+	// Render models
 	testModel->bind(commandBuffers[imageIndex]);
 	testModel->draw(commandBuffers[imageIndex]);
 
