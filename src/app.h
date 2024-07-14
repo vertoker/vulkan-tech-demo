@@ -36,15 +36,16 @@ private:
 	void createPipelineLayout();
 	void createPipeline();
 	void createCommandBuffers();
+	void freeCommandBuffers();
 	void drawFrame();
 
 	void recreateSwapChain();
 	void recordCommandBuffer(int imageIndex);
 
 	std::unique_ptr<VulkanWindow> window;
-	VulkanSwapChain* swapChain = nullptr;
-
 	std::unique_ptr<VulkanDevice> device;
+
+	std::unique_ptr<VulkanSwapChain> swapChain;
 
 	std::unique_ptr<VulkanPipeline> pipeline;
 	std::string vertShaderPath, fragShaderPath;

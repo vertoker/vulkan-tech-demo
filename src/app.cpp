@@ -18,7 +18,7 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 VulkanApp::~VulkanApp()
 {
 	vkDestroyPipelineLayout(device->device(), pipelineLayout, nullptr);
-	delete swapChain;
+	//delete swapChain;
 }
 
 void VulkanApp::run()
@@ -79,6 +79,16 @@ void VulkanApp::createCommandBuffers()
 	if (vkAllocateCommandBuffers(device->device(), &allocInfo, commandBuffers.data()) != VK_SUCCESS)
 		throw std::runtime_error("failed to allocate command buffers!");
 }
+void VulkanApp::freeCommandBuffers()
+{
+	vkFreeCommandBuffers(
+		device->device(),
+		device->getCommandPool(),
+		static_cast<uint32_t>(commandBuffers.size()),
+		commandBuffers.data()
+	);
+	commandBuffers.clear();
+}
 
 void VulkanApp::drawFrame()
 {
@@ -117,11 +127,19 @@ void VulkanApp::recreateSwapChain()
 
 	vkDeviceWaitIdle(device->device());
 
-	if (swapChain != nullptr) delete swapChain;
-	swapChain = new VulkanSwapChain(*device, extent);
+	if (swapChain == nullptr) {
+		swapChain = std::make_unique<VulkanSwapChain>(*device, extent);
+	} else {
+		swapChain = std::make_unique<VulkanSwapChain>(*device, extent, std::move(swapChain));
+		if (swapChain->imageCount() != commandBuffers.size()) {
+			freeCommandBuffers();
+			createCommandBuffers();
+		}
+	}
 
 	// Need new pipeline because of new swapchain
 	createPipeline();
+	// TODO: If render pass compatible do nothing else
 }
 
 void VulkanApp::recordCommandBuffer(int imageIndex)
