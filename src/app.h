@@ -5,6 +5,11 @@
 #include "render/swapchain.h"
 #include "render/model.h"
 
+// Libs
+#define GLM_FORCE_RADIANS
+#define GLM_FORCE_DEPTH_ZERO_TO_ONE
+#include <glm/glm.hpp>
+
 // std
 #include <iostream>
 #include <memory>
@@ -18,6 +23,12 @@ public:
 
 	std::string vertShaderPath;
 	std::string fragShaderPath;
+};
+
+struct PushConstantData {
+	// TODO rewrite to the 4x4 matrix
+	glm::vec2 offset;
+	glm::vec3 color;
 };
 
 class VulkanApp {
