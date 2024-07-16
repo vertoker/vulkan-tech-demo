@@ -20,6 +20,10 @@ int main() {
     Log("Start app");
 
     auto appSettings = createAppSettings();
+
+    std::cout << appSettings.vertShaderPath << std::endl;
+    std::cout << appSettings.fragShaderPath << std::endl;
+
     VulkanApp app{ appSettings };
 
     try {

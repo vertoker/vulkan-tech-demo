@@ -8,6 +8,7 @@
 // You must use only ONE constant per shader entry point
 layout(push_constant) uniform Push { // this name doesn't matter, name as you want
 	// Order of members is important
+	mat2 transform;
 	vec2 offset;
 	vec3 color;
 } push; // name of it

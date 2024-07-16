@@ -9,17 +9,14 @@ layout(location = 0) in vec2 position;
 layout(location = 1) in vec3 color;
 
 // Input constants (individual data per drawing)
-// You must use only ONE constant per shader entry point
-layout(push_constant) uniform Push { // this name doesn't matter, name as you want
-	// Order of members is important
+layout(push_constant) uniform Push {
+	mat2 transform;
 	vec2 offset;
 	vec3 color;
-} push; // name of it
+} push;
 
 // Output
 // layout(location = 0) out vec3 fragColor; // use it if you need to test color blending
-
-// Input location and Output location is different buffers
 
 void main() {
 	gl_Position = vec4(position + push.offset, 0.0, 1.0);
