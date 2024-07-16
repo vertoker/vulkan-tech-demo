@@ -10,7 +10,6 @@ layout(location = 1) in vec3 color;
 
 // Input constants (individual data per drawing)
 layout(push_constant) uniform Push {
-	mat2 transform;
 	vec2 offset;
 	vec3 color;
 } push;
