@@ -28,7 +28,8 @@ public:
 struct PushConstantData {
 	// TODO rewrite to the 4x4 matrix
 	glm::vec2 offset;
-	glm::vec3 color;
+	// alignas is for memory specification for shader declaration
+	alignas(16) glm::vec3 color;
 };
 
 class VulkanApp {
