@@ -1,9 +1,9 @@
 #pragma once
 
+#include "gameobject.h"
 #include "render/window.h"
 #include "render/pipeline.h"
 #include "render/swapchain.h"
-#include "render/model.h"
 
 // Libs
 #define GLM_FORCE_RADIANS
@@ -26,7 +26,7 @@ public:
 };
 
 struct PushConstantData {
-	// TODO rewrite to the 4x4 matrix
+	glm::mat2 transform{ 1.f }; // Identity matrix
 	glm::vec2 offset;
 	// alignas is for memory specification for shader declaration
 	alignas(16) glm::vec3 color;
@@ -44,7 +44,7 @@ public:
 	void run();
 
 private:
-	void loadModels();
+	void loadGameObjects();
 	void createPipelineLayout();
 	void createPipeline();
 	void createCommandBuffers();
@@ -53,6 +53,7 @@ private:
 
 	void recreateSwapChain();
 	void recordCommandBuffer(int imageIndex);
+	void renderGameObjects(VkCommandBuffer commandBuffer);
 
 	std::unique_ptr<VulkanWindow> window;
 	std::unique_ptr<VulkanDevice> device;
@@ -64,5 +65,5 @@ private:
 	VkPipelineLayout pipelineLayout;
 	std::vector<VkCommandBuffer> commandBuffers;
 
-	std::unique_ptr<VulkanModel> testModel;
+	std::vector<GameObject> gameObjects;
 };

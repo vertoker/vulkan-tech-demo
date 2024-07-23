@@ -10,7 +10,7 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 	fragShaderPath = settings.fragShaderPath;
 	vertShaderPath = settings.vertShaderPath;
 
-	loadModels();
+	loadGameObjects();
 	createPipelineLayout();
 	recreateSwapChain();
 	createCommandBuffers();
@@ -33,14 +33,21 @@ void VulkanApp::run()
 	vkDeviceWaitIdle(device->device());
 }
 
-void VulkanApp::loadModels()
+void VulkanApp::loadGameObjects()
 {
 	std::vector<VulkanModel::Vertex> vertices {
 		{ { 0.0f, -0.5f }, { 1.0f, 0.0f, 0.0f } },
 		{ { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
 		{ { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
 	};
-	testModel = std::make_unique<VulkanModel>(*device, vertices);
+	auto testModel = std::make_shared<VulkanModel>(*device, vertices);
+
+	auto triangle = GameObject::createGameObject();
+	triangle.model = testModel;
+	triangle.color = { .1f, .1f, .8f };
+	triangle.transform2D.position.x = .2f;
+
+	gameObjects.push_back(std::move(triangle));
 }
 
 void VulkanApp::createPipelineLayout()
@@ -149,11 +156,6 @@ void VulkanApp::recreateSwapChain()
 
 void VulkanApp::recordCommandBuffer(int imageIndex)
 {
-	// Anim temp
-	// it static because when functions is finish, it remember value position
-	static int frame = 0;
-	frame = (frame + 1) % 500;
-
 	VkCommandBufferBeginInfo beginInfo{};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
@@ -194,29 +196,30 @@ void VulkanApp::recordCommandBuffer(int imageIndex)
 	vkCmdSetViewport(commandBuffers[imageIndex], 0, 1, &viewport);
 	vkCmdSetScissor(commandBuffers[imageIndex], 0, 1, &scissor);
 
-	// Core
-	pipeline->bind(commandBuffers[imageIndex]);
-
-	// Bind instance of model
-	testModel->bind(commandBuffers[imageIndex]);
-
-	// Render several models with a different constants
-	for (int j = 0; j < 4; j++)
-	{
-		PushConstantData push{};
-		// Temp movement
-		push.offset = { -0.5f + frame * 0.002f, -0.4f + j * 0.25f };
-		push.color = { 0.0f, 0.0f, 0.2f + 0.2f * j };
-
-		vkCmdPushConstants(commandBuffers[imageIndex], pipelineLayout,
-			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-			0, sizeof(PushConstantData), &push);
-
-		testModel->draw(commandBuffers[imageIndex]);
-	}
+	// Render gameobjects
+	renderGameObjects(commandBuffers[imageIndex]);
 
 	vkCmdEndRenderPass(commandBuffers[imageIndex]);
 
 	if (vkEndCommandBuffer(commandBuffers[imageIndex]) != VK_SUCCESS)
 		throw std::runtime_error("failed to record command buffer!");
+}
+
+void VulkanApp::renderGameObjects(VkCommandBuffer commandBuffer)
+{
+	pipeline->bind(commandBuffer);
+
+	for (auto& obj : gameObjects) {
+		PushConstantData push{};
+		// Temp movement
+		push.offset = obj.transform2D.position;
+		push.color = obj.color;
+		push.transform = obj.transform2D.mat2();
+
+		vkCmdPushConstants(commandBuffer, pipelineLayout,
+			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+			0, sizeof(PushConstantData), &push);
+		obj.model->bind(commandBuffer);
+		obj.model->draw(commandBuffer);
+	}
 }
