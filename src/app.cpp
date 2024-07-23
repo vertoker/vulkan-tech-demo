@@ -35,19 +35,24 @@ void VulkanApp::run()
 
 void VulkanApp::loadGameObjects()
 {
-	std::vector<VulkanModel::Vertex> vertices {
+	std::vector<VulkanModel::Vertex> vertices{
 		{ { 0.0f, -0.5f }, { 1.0f, 0.0f, 0.0f } },
 		{ { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
 		{ { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
 	};
 	auto testModel = std::make_shared<VulkanModel>(*device, vertices);
 
-	auto triangle = GameObject::createGameObject();
-	triangle.model = testModel;
-	triangle.color = { .1f, .1f, .8f };
-	triangle.transform2D.position.x = .2f;
+	for (size_t i = 0; i < 150; i++)
+	{
+		auto triangle = GameObject::createGameObject();
+		triangle.model = testModel;
+		triangle.color = { 0.8f, 0.1f, 0.1f + i * 0.003f };
+		triangle.transform2D.position.x = 0.0f;
+		triangle.transform2D.scale = { 0.3f + i * 0.008f, 1.0f };
+		triangle.transform2D.rotation = 0.0f * glm::two_pi<float>();
 
-	gameObjects.push_back(std::move(triangle));
+		gameObjects.push_back(std::move(triangle));
+	}
 }
 
 void VulkanApp::createPipelineLayout()
@@ -207,9 +212,19 @@ void VulkanApp::recordCommandBuffer(int imageIndex)
 
 void VulkanApp::renderGameObjects(VkCommandBuffer commandBuffer)
 {
+	// Test rotation 2
+	float i = 0;
+	for (auto& obj : gameObjects) {
+		i += 0.01f;
+		obj.transform2D.rotation = glm::mod(obj.transform2D.rotation + 0.001f * i, 2.0f * glm::two_pi<float>());
+	}
+
 	pipeline->bind(commandBuffer);
 
 	for (auto& obj : gameObjects) {
+		// Test rotation anim
+		//obj.transform2D.rotation = glm::mod(obj.transform2D.rotation + 0.01f, glm::two_pi<float>());
+
 		PushConstantData push{};
 		// Temp movement
 		push.offset = obj.transform2D.position;
