@@ -10,19 +10,7 @@ struct Transform2D {
 	glm::vec2 scale{ 1.f, 1.f };
 	float rotation;
 
-	glm::mat2 mat2() {
-		const float s = glm::sin(rotation);
-		const float c = glm::cos(rotation);
-		glm::mat2 rotationMatrix{ {c, s},{-s, c} };
-
-		// Identity matrix, but with scaling
-		glm::mat2 scaleMatrix{ {scale.x, 0.0f},{0.0f, scale.y} };
-
-		// Matrix multiplication is not commuticative
-		// and for correct result, use next order:
-		// rotation -> scale -> position
-		return rotationMatrix * scaleMatrix;
-	}
+	glm::mat2 mat2();
 };
 
 // Unity like
