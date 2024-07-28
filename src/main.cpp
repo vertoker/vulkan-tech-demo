@@ -2,6 +2,8 @@
 #include "app.h"
 #include "utility/log.h"
 
+#include "boost/dll.hpp"
+
 // std
 #include <cstdlib>
 #include <iostream>
@@ -10,8 +12,10 @@
 VulkanAppSettings createAppSettings() {
     VulkanAppSettings appSettings{};
 
-    appSettings.vertShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.vert.spv");
-    appSettings.fragShaderPath = RESOURCES_PATH + std::string("ShaderCache/simple.frag.spv");
+    auto path = boost::dll::program_location().parent_path().generic_path().string();
+    path = path + "/resources/ShaderCache/";
+    appSettings.vertShaderPath = path + std::string("simple.vert.spv");
+    appSettings.fragShaderPath = path + std::string("simple.frag.spv");
 
     return appSettings;
 }

@@ -51,6 +51,10 @@ add_subdirectory("lib/Vulkan-Loader")
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw)
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE Vulkan::Headers Vulkan::Loader)
 
+# Boost (with vcpkg)
+find_package(Boost REQUIRED COMPONENTS dll)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE Boost::dll)
+
 #--------------------------------------------------------------------
 # Utility
 #--------------------------------------------------------------------
