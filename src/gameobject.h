@@ -5,6 +5,11 @@
 // std
 #include <memory>
 
+struct Rigidbody2D {
+	glm::vec2 velocity;
+	float mass{ 1.0f };
+};
+
 struct Transform2D {
 	glm::vec2 position;
 	glm::vec2 scale{ 1.f, 1.f };
@@ -28,6 +33,7 @@ public:
 	std::shared_ptr<VulkanModel> model{};
 	glm::vec3 color{};
 	Transform2D transform2D{};
+	Rigidbody2D rigidbody2D{};
 
 private:
 	GameObject(id_t objId) : id{ objId } {}

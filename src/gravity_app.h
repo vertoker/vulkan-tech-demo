@@ -16,7 +16,7 @@
 #include <memory>
 #include <vector>
 
-struct VulkanAppSettings {
+struct VulkanPhysicsAppSettings {
 public:
 	int screenWidth = 800;
 	int screenHeight = 600;
@@ -26,19 +26,20 @@ public:
 	std::string fragShaderPath;
 };
 
-class VulkanApp {
+class VulkanPhysicsApp {
 public:
-	VulkanApp(VulkanAppSettings& settings);
-	~VulkanApp();
+	VulkanPhysicsApp(VulkanPhysicsAppSettings& settings);
+	~VulkanPhysicsApp();
 
-	VulkanApp() = default;
-	VulkanApp(const VulkanApp&) = delete;
-	VulkanApp& operator=(const VulkanApp&) = delete;
+	VulkanPhysicsApp() = default;
+	VulkanPhysicsApp(const VulkanPhysicsApp&) = delete;
+	VulkanPhysicsApp& operator=(const VulkanPhysicsApp&) = delete;
 
 	void run();
 
 private:
-	void loadGameObjects();
+	std::vector<GameObject> createPhysicsObjects();
+	std::vector<GameObject> createVectorField();
 
 	std::unique_ptr<VulkanWindow> window;
 	std::unique_ptr<VulkanDevice> device;

@@ -56,4 +56,3 @@ void VulkanApp::loadGameObjects()
 		gameObjects.push_back(std::move(triangle));
 	}
 }
-
