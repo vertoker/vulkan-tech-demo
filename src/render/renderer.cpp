@@ -23,7 +23,6 @@ void VulkanRenderer::recreateSwapChain()
 		extent = window.getExtent();
 		glfwWaitEvents();
 	}
-
 	vkDeviceWaitIdle(device.device());
 
 	if (swapChain == nullptr) {
@@ -78,7 +77,7 @@ VkCommandBuffer VulkanRenderer::beginFrame()
 	}
 
 	if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
-		throw std::runtime_error("failed to present swap chain image!");
+		throw std::runtime_error("failed to present swap chain image on beginFrame!");
 
 	isFrameStarted = true;
 
@@ -108,9 +107,8 @@ void VulkanRenderer::endFrame()
 		window.resetWindowResizedFlag();
 		recreateSwapChain();
 	}
-
-	if (result != VK_SUCCESS)
-		throw std::runtime_error("failed to present swap chain image!");
+	else if (result != VK_SUCCESS)
+		throw std::runtime_error("failed to present swap chain image on endFrame!");
 
 	isFrameStarted = false;
 }

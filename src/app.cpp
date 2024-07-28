@@ -18,7 +18,6 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 VulkanApp::~VulkanApp()
 {
 	vkDestroyPipelineLayout(device->device(), pipelineLayout, nullptr);
-	//delete swapChain;
 }
 
 void VulkanApp::run()
