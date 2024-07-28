@@ -29,11 +29,11 @@ void VulkanRenderer::recreateSwapChain()
 		swapChain = std::make_unique<VulkanSwapChain>(device, extent);
 	}
 	else {
-		swapChain = std::make_unique<VulkanSwapChain>(device, extent, std::move(swapChain));
-		if (swapChain->imageCount() != commandBuffers.size()) {
-			freeCommandBuffers();
-			createCommandBuffers();
-		}
+		std::shared_ptr<VulkanSwapChain> oldSwapChain = std::move(swapChain);
+		swapChain = std::make_unique<VulkanSwapChain>(device, extent, oldSwapChain);
+
+		if (!oldSwapChain->compareSwapFormats(*swapChain.get()))
+			throw std::runtime_error("Swap chain image (or depth) format has changed!");
 	}
 
 	// Need new pipeline because of new swapchain
@@ -43,7 +43,7 @@ void VulkanRenderer::recreateSwapChain()
 
 void VulkanRenderer::createCommandBuffers()
 {
-	commandBuffers.resize(swapChain->imageCount());
+	commandBuffers.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 
 	VkCommandBufferAllocateInfo allocInfo{};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -111,6 +111,7 @@ void VulkanRenderer::endFrame()
 		throw std::runtime_error("failed to present swap chain image on endFrame!");
 
 	isFrameStarted = false;
+	currentFrameIndex = (currentFrameIndex + 1) % VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
 }
 
 void VulkanRenderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer)
