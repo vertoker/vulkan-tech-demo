@@ -2,8 +2,8 @@
 
 #include "gameobject.h"
 #include "render/window.h"
-#include "render/pipeline.h"
 #include "render/renderer.h"
+#include "systems/simple_render_system.h"
 
 // Libs
 #define GLM_FORCE_RADIANS
@@ -46,17 +46,11 @@ public:
 
 private:
 	void loadGameObjects();
-	void createPipelineLayout();
-	void createPipeline();
-	void renderGameObjects(VkCommandBuffer commandBuffer);
 
 	std::unique_ptr<VulkanWindow> window;
 	std::unique_ptr<VulkanDevice> device;
 	std::unique_ptr<VulkanRenderer> renderer;
-
-	std::unique_ptr<VulkanPipeline> pipeline;
-	std::string vertShaderPath, fragShaderPath;
-	VkPipelineLayout pipelineLayout;
+	std::unique_ptr<SimpleRenderSystem> renderSystem;
 
 	std::vector<GameObject> gameObjects;
 };

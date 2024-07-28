@@ -7,17 +7,15 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 	window = std::make_unique<VulkanWindow>(settings.screenWidth, settings.screenHeight, settings.name);
 	device = std::make_unique<VulkanDevice>(*window);
 	renderer = std::make_unique<VulkanRenderer>(*window, *device);
-
-	fragShaderPath = settings.fragShaderPath;
-	vertShaderPath = settings.vertShaderPath;
+	renderSystem = std::make_unique<SimpleRenderSystem>(*device, 
+		renderer->getSwapChainRenderPass(), 
+		settings.vertShaderPath, settings.fragShaderPath);
 
 	loadGameObjects();
-	createPipelineLayout();
-	createPipeline();
 }
 VulkanApp::~VulkanApp()
 {
-	vkDestroyPipelineLayout(device->device(), pipelineLayout, nullptr);
+
 }
 
 void VulkanApp::run()
@@ -28,7 +26,7 @@ void VulkanApp::run()
 		// On Linux, you need another frame update method
 		if (auto commandBuffer = renderer->beginFrame()) {
 			renderer->beginSwapChainRenderPass(commandBuffer);
-			renderGameObjects(commandBuffer);
+			renderSystem->renderGameObjects(commandBuffer, gameObjects);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}
@@ -59,61 +57,3 @@ void VulkanApp::loadGameObjects()
 	}
 }
 
-void VulkanApp::createPipelineLayout()
-{
-	VkPushConstantRange pushConstantRange{};
-	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-	pushConstantRange.offset = 0;
-	pushConstantRange.size = sizeof(PushConstantData);
-
-	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pSetLayouts = nullptr;
-	pipelineLayoutInfo.pushConstantRangeCount = 1;
-	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
-
-	if (vkCreatePipelineLayout(device->device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
-		throw std::runtime_error("failed to create pipeline layout");
-}
-
-void VulkanApp::createPipeline()
-{
-	assert(pipelineLayout != nullptr && "Can't create pipeline before pipeline layout");
-
-	PipelineConfigInfo pipelineInfo{};
-	VulkanPipeline::defaultConfigInfo(pipelineInfo);
-	pipelineInfo.renderPass = renderer->getSwapChainRenderPass();
-	pipelineInfo.pipelineLayout = pipelineLayout;
-
-	pipeline = std::make_unique<VulkanPipeline>(*device, pipelineInfo, vertShaderPath, fragShaderPath);
-}
-
-void VulkanApp::renderGameObjects(VkCommandBuffer commandBuffer)
-{
-	// Test rotation 2
-	float i = 0;
-	for (auto& obj : gameObjects) {
-		i += 0.01f;
-		obj.transform2D.rotation = glm::mod(obj.transform2D.rotation + 0.001f * i, 2.0f * glm::two_pi<float>());
-	}
-
-	pipeline->bind(commandBuffer);
-
-	for (auto& obj : gameObjects) {
-		// Test rotation anim
-		//obj.transform2D.rotation = glm::mod(obj.transform2D.rotation + 0.01f, glm::two_pi<float>());
-
-		PushConstantData push{};
-		// Temp movement
-		push.offset = obj.transform2D.position;
-		push.color = obj.color;
-		push.transform = obj.transform2D.mat2();
-
-		vkCmdPushConstants(commandBuffer, pipelineLayout,
-			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-			0, sizeof(PushConstantData), &push);
-		obj.model->bind(commandBuffer);
-		obj.model->draw(commandBuffer);
-	}
-}
