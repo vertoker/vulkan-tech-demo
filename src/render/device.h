@@ -24,10 +24,10 @@ struct QueueFamilyIndices {
 
 class VulkanDevice {
 public:
-#ifdef NDEBUG
-    const bool enableValidationLayers = false;
-#else
+#ifdef _DEBUG
     const bool enableValidationLayers = true;
+#else
+    const bool enableValidationLayers = false;
 #endif
 
     VulkanDevice(VulkanWindow& window);

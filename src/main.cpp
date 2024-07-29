@@ -23,6 +23,12 @@ VulkanPhysicsAppSettings createAppSettings() {
 int main() {
     Log("Start app");
 
+#if _DEBUG
+    Log("Mode = Debug");
+#else
+    Log("Mode = Release");
+#endif
+
     auto appSettings = createAppSettings();
 
     std::cout << appSettings.vertShaderPath << std::endl;
