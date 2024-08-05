@@ -6,11 +6,12 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 class VulkanModel {
 public:
 	struct Vertex {
-		glm::vec2 position;
+		glm::vec3 position;
 		glm::vec3 color;
 
 		static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();

@@ -35,25 +35,78 @@ void VulkanApp::run()
 	vkDeviceWaitIdle(device->device());
 }
 
+
+std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 offset) {
+    std::vector<VulkanModel::Vertex> vertices{
+
+        // left face (white)
+        {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+        {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+        {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+        {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+        {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+        {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+        // right face (yellow)
+        {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+        {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+        {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+        {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+        {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+        {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+        // top face (orange, remember y axis points down)
+        {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+        {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+        {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+        {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+        {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+        {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+        // bottom face (red)
+        {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+        {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+        {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+        {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+        {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+        {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+        // nose face (blue)
+        {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+        {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+        {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+        {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+        {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+        {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+        // tail face (green)
+        {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+        {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+        {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+        {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+        {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+        {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
+    };
+
+    for (auto& v : vertices)
+        v.position += offset;
+
+    return std::make_unique<VulkanModel>(device, vertices);
+}
+
 void VulkanApp::loadGameObjects()
 {
-	std::vector<VulkanModel::Vertex> vertices{
-		{ { 0.0f, -0.5f }, { 1.0f, 0.0f, 0.0f } },
-		{ { 0.5f, 0.5f }, { 0.0f, 1.0f, 0.0f } },
-		{ { -0.5f, 0.5f }, { 0.0f, 0.0f, 1.0f } }
-	};
-	auto testModel = std::make_shared<VulkanModel>(*device, vertices);
+    std::shared_ptr<VulkanModel> testModel = createCubeModel(*device, { 0.0f, 0.0f, 0.0f });
 
 	for (size_t i = 0; i < 150; i++)
 	{
-		auto triangle = GameObject::createGameObject();
-		triangle.model = testModel;
-		triangle.color = { 0.8f, 0.1f, 0.1f + i * 0.003f };
-		triangle.transform2D.position.x = 0.0f;
-		triangle.transform2D.scale = { 0.3f + i * 0.008f, 1.0f };
-		triangle.transform2D.rotation = 0.0f * glm::two_pi<float>();
+		auto cube = GameObject::createGameObject();
+        cube.model = testModel;
+        cube.transform.position = { 0.0f, 0.0f, 0.0f };
+        cube.transform.scale = { 0.5f, 0.5f, 0.5f };
+        cube.transform.rotation = { 0.0f, 1.0f, 0.0f, 0.0f };
 
-		gameObjects.push_back(std::move(triangle));
+		gameObjects.push_back(std::move(cube));
 	}
 }
-

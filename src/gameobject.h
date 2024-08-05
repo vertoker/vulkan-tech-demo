@@ -1,16 +1,20 @@
 #pragma once
 
 #include "render/model.h"
+#include <glm/gtc/matrix_transform.hpp>
 
 // std
 #include <memory>
 
-struct Transform2D {
-	glm::vec2 position;
-	glm::vec2 scale{ 1.f, 1.f };
-	float rotation;
+struct Transform {
+	glm::vec3 position{};
+	glm::quat rotation{};
+	glm::vec3 scale{ 1.f, 1.f, 1.f };
 
-	glm::mat2 mat2();
+	glm::mat4 position_matrix();
+	glm::mat4 rotation_matrix() const;
+	glm::mat4 scale_matrix();
+	glm::mat4 matrix();
 };
 
 // Unity like
@@ -27,7 +31,7 @@ public:
 
 	std::shared_ptr<VulkanModel> model{};
 	glm::vec3 color{};
-	Transform2D transform2D{};
+	Transform transform{};
 
 private:
 	GameObject(id_t objId) : id{ objId } {}

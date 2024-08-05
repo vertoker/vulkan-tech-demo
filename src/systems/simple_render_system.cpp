@@ -1,8 +1,7 @@
 #include "simple_render_system.h"
 
 struct PushConstantData {
-	glm::mat2 transform{ 1.f }; // Identity matrix
-	glm::vec2 offset;
+	glm::mat4 transform{ 1.f }; // Identity matrix
 	// alignas is for memory specification for shader declaration
 	alignas(16) glm::vec3 color;
 };
@@ -22,24 +21,15 @@ SimpleRenderSystem::~SimpleRenderSystem()
 
 void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects)
 {
-	// Test rotation 2
-	float i = 0;
-	for (auto& obj : gameObjects) {
-		i += 0.01f;
-		obj.transform2D.rotation = glm::mod(obj.transform2D.rotation + 0.001f * i, 2.0f * glm::two_pi<float>());
-	}
-
 	pipeline->bind(commandBuffer);
 
 	for (auto& obj : gameObjects) {
 		// Test rotation anim
-		//obj.transform2D.rotation = glm::mod(obj.transform2D.rotation + 0.01f, glm::two_pi<float>());
+		obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.01f, 1.0f);
 
 		PushConstantData push{};
-		// Temp movement
-		push.offset = obj.transform2D.position;
 		push.color = obj.color;
-		push.transform = obj.transform2D.mat2();
+		push.transform = obj.transform.matrix();
 
 		vkCmdPushConstants(commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,

@@ -67,7 +67,7 @@ std::vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::getAttribute
 	// For position
 	attribureDescriptions[0].location = 0;
 	attribureDescriptions[0].binding = 0;
-	attribureDescriptions[0].format = VK_FORMAT_R32G32_SFLOAT;
+	attribureDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
 	attribureDescriptions[0].offset = offsetof(Vertex, position);
 
 	// For color
