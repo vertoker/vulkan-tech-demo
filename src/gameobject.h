@@ -8,11 +8,8 @@
 
 struct Transform {
 	glm::vec3 position{};
-	glm::vec3 rotation{}; // wxyz
+	glm::vec3 rotation{};
 	glm::vec3 scale{ 1.f, 1.f, 1.f };
-
-	glm::mat4 position_matrix();
-	glm::mat4 scale_matrix();
 
 	glm::mat4 matrix();
 };
