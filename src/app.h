@@ -18,7 +18,7 @@
 
 struct VulkanAppSettings {
 public:
-	int screenWidth = 800;
+	int screenWidth = 600;
 	int screenHeight = 600;
 	std::string name = "vulkan tech demo";
 

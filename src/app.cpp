@@ -37,56 +37,41 @@ void VulkanApp::run()
 
 
 std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 offset) {
-    std::vector<VulkanModel::Vertex> vertices{
+    glm::vec3 white{ 0.9f, 0.9f, 0.9f };
+    glm::vec3 yellow{ 0.8f, 0.8f, 0.1f };
+    glm::vec3 orange{ 0.9f, 0.2f, 0.1f };
+    glm::vec3 red{ 0.8f, 0.1f, 0.1f };
+    glm::vec3 blue{ 0.1f, 0.1f, 0.8f };
+    glm::vec3 green{ 0.1f, 0.8f, 0.1f };
 
+    glm::vec3 v1{  0.5f,  0.5f,  0.5f };
+    glm::vec3 v2{ -0.5f,  0.5f,  0.5f };
+    glm::vec3 v3{  0.5f, -0.5f,  0.5f };
+    glm::vec3 v4{ -0.5f, -0.5f,  0.5f };
+    glm::vec3 v5{  0.5f,  0.5f, -0.5f };
+    glm::vec3 v6{ -0.5f,  0.5f, -0.5f };
+    glm::vec3 v7{  0.5f, -0.5f, -0.5f };
+    glm::vec3 v8{ -0.5f, -0.5f, -0.5f };
+
+    std::vector<VulkanModel::Vertex> vertices {
         // left face (white)
-        {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-        {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-        {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-        {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
-        {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-        {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
-
+        {v8, white}, {v2, white}, {v4, white},
+        {v8, white}, {v6, white}, {v2, white},
         // right face (yellow)
-        {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-        {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-        {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
-        {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
-
-        // top face (orange, remember y axis points down)
-        {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-        {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-        {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-        {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-
+        {v7, yellow}, {v3, yellow}, {v1, yellow},
+        {v7, yellow}, {v1, yellow}, {v5, yellow},
+        // top face (orange)
+        {v8, orange}, {v4, orange}, {v3, orange},
+        {v8, orange}, {v3, orange}, {v7, orange},
         // bottom face (red)
-        {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-        {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-        {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-        {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
-
+        {v6, red}, {v1, red}, {v2, red},
+        {v6, red}, {v5, red}, {v1, red},
         // nose face (blue)
-        {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-        {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-        {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-        {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-
+        {v4, blue}, {v2, blue}, {v1, blue},
+        {v4, blue}, {v1, blue}, {v3, blue},
         // tail face (green)
-        {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-        {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-        {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-        {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-
+        {v8, green}, {v5, green}, {v6, green},
+        {v8, green}, {v7, green}, {v5, green},
     };
 
     for (auto& v : vertices)
@@ -99,14 +84,11 @@ void VulkanApp::loadGameObjects()
 {
     std::shared_ptr<VulkanModel> testModel = createCubeModel(*device, { 0.0f, 0.0f, 0.0f });
 
-	for (size_t i = 0; i < 150; i++)
-	{
-		auto cube = GameObject::createGameObject();
-        cube.model = testModel;
-        cube.transform.position = { 0.0f, 0.0f, 0.0f };
-        cube.transform.scale = { 0.5f, 0.5f, 0.5f };
-        cube.transform.rotation = { 0.0f, 1.0f, 0.0f, 0.0f };
+    auto cube = GameObject::createGameObject();
+    cube.model = testModel;
+    cube.transform.position = { 0.0f, 0.0f, 0.5f };
+    cube.transform.scale = { 0.5f, 0.5f, 0.5f };
+    cube.transform.rotation = { 0.0f, 0.0f, 0.0f };
 
-		gameObjects.push_back(std::move(cube));
-	}
+    gameObjects.push_back(std::move(cube));
 }

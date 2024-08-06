@@ -25,7 +25,8 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 
 	for (auto& obj : gameObjects) {
 		// Test rotation anim
-		obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.01f, 1.0f);
+		obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
+		obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());
 
 		PushConstantData push{};
 		push.color = obj.color;

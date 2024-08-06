@@ -13,7 +13,7 @@ glm::mat4 Transform::position_matrix()
 	return matrix;
 }
 
-glm::mat4 Transform::rotation_matrix() const
+/*glm::mat4 Transform::rotation_matrix()
 {
 	float x = rotation.x * 2.0f;
 	float y = rotation.y * 2.0f;
@@ -40,7 +40,7 @@ glm::mat4 Transform::rotation_matrix() const
 		          0.0f,            0.0f,            0.0f,  1.0f
 	};
 	return matrix;
-}
+}*/
 
 glm::mat4 Transform::scale_matrix()
 {
@@ -56,12 +56,10 @@ glm::mat4 Transform::scale_matrix()
 
 glm::mat4 Transform::matrix()
 {
-	//glm::translate();
-	glm::mat4 pos = position_matrix();
-	//glm::rotate();
-	glm::mat4 rot = rotation_matrix();
-	//glm::scale();
-	glm::mat4 sca = scale_matrix();
-
-	return sca /** rot*/ * pos;
+	auto matrix = glm::translate(glm::mat4{ 1.0f }, position);
+	matrix = glm::rotate(matrix, rotation.y, { 0.0f, 1.0f, 0.0f });
+	matrix = glm::rotate(matrix, rotation.x, { 1.0f, 0.0f, 0.0f });
+	matrix = glm::rotate(matrix, rotation.z, { 0.0f, 0.0f, 1.0f });
+	matrix = glm::scale(matrix, scale);
+	return matrix;
 }
