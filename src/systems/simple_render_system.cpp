@@ -27,10 +27,11 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 		// Test rotation anim
 		obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
 		obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());
+		//obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.005f, 1.0f);
 
 		PushConstantData push{};
 		push.color = obj.color;
-		push.transform = obj.transform.matrix();
+		push.transform = obj.transform.matrix2();
 
 		vkCmdPushConstants(commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,

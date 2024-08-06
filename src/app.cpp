@@ -89,6 +89,7 @@ void VulkanApp::loadGameObjects()
     cube.transform.position = { 0.0f, 0.0f, 0.5f };
     cube.transform.scale = { 0.5f, 0.5f, 0.5f };
     cube.transform.rotation = { 0.0f, 0.0f, 0.0f };
+    //cube.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
 
     gameObjects.push_back(std::move(cube));
 }
