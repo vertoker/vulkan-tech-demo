@@ -24,10 +24,15 @@ void VulkanApp::run()
 	while (!window->shouldClose()) {
 		glfwPollEvents();
 
+        camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
+        //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
+
         float aspect = renderer->getAspectRatio();
         // height is constant, width is flexible
         // right - left = aspect * (bottom - top) (y is inverted)
-        camera->setOrthographicProjection(-aspect, aspect, -1, 1, -5, 5);
+
+        //camera->setOrthographicProjection(-aspect, aspect, -1, 1, -5, 5);
+        camera->setPerspectiveProjection(glm::radians(70.0f), aspect, 0.0f, 10.0f);
 
 		// On Linux, resizing can be occurs wrong rendering
 		// On Linux, you need another frame update method

@@ -12,9 +12,15 @@ public:
 	// This is frustum view
 	void setPerspectiveProjection(float verticalFOV, float aspect, float near, float far);
 
-	const glm::mat4 getProjection() const { return projectionMatrix; }
+	void setViewDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up = glm::vec3{ 0.0f, -1.0f, 0.0f });
+	void setViewTarget(glm::vec3 position, glm::vec3 target, glm::vec3 up = glm::vec3{ 0.0f, -1.0f, 0.0f });
+	void setViewYXZ(glm::vec3 position, glm::vec3 rotation);
+
+	const glm::mat4& getProjection() const { return projectionMatrix; }
+	const glm::mat4& getView() const { return viewMatrix; }
 
 private:
 	// By default is identity matrix
 	glm::mat4 projectionMatrix{ 1.0f };
+	glm::mat4 viewMatrix{ 1.0f };
 };

@@ -23,6 +23,9 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 {
 	pipeline->bind(commandBuffer);
 
+	// TODO push camera matrix to the GPU, do not do this in CPU
+	auto projectionView = camera.getProjection() * camera.getView();
+
 	for (auto& obj : gameObjects) {
 		// Test rotation anim
 		obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
@@ -32,7 +35,7 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 		PushConstantData push{};
 		push.color = obj.color;
 		// TODO push camera matrix to the GPU, do not do this in CPU
-		push.transform = camera.getProjection() * obj.transform.matrix();
+		push.transform = projectionView * obj.transform.matrix();
 
 		vkCmdPushConstants(commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
