@@ -23,7 +23,9 @@ public:
 	VulkanRenderer& operator=(const VulkanRenderer&) = delete;
 	
 	VkRenderPass getSwapChainRenderPass() const { return swapChain->getRenderPass(); }
+	float getAspectRatio() const { return swapChain->extentAspectRatio(); }
 	bool isFrameInProgress() const { return isFrameStarted; }
+
 	VkCommandBuffer getCurrentCommandBuffer() const 
 	{
 		assert(isFrameStarted && "Cannot get command buffer when frame is not in progress");

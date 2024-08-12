@@ -13,7 +13,6 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 		settings.vertShaderPath, settings.fragShaderPath);
 
 	loadGameObjects();
-    camera->setOrthographicProjection(-1, 1, -1, 1, -5, 5);
 }
 VulkanApp::~VulkanApp()
 {
@@ -24,9 +23,16 @@ void VulkanApp::run()
 {
 	while (!window->shouldClose()) {
 		glfwPollEvents();
+
+        float aspect = renderer->getAspectRatio();
+        // height is constant, width is flexible
+        // right - left = aspect * (bottom - top) (y is inverted)
+        camera->setOrthographicProjection(-aspect, aspect, -1, 1, -5, 5);
+
 		// On Linux, resizing can be occurs wrong rendering
 		// On Linux, you need another frame update method
 		if (auto commandBuffer = renderer->beginFrame()) {
+
 			renderer->beginSwapChainRenderPass(commandBuffer);
 			renderSystem->renderGameObjects(commandBuffer, gameObjects, *camera);
 			renderer->endSwapChainRenderPass(commandBuffer);
