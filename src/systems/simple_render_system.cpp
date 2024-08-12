@@ -19,7 +19,7 @@ SimpleRenderSystem::~SimpleRenderSystem()
 	vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 }
 
-void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects)
+void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects, const VulkanCamera& camera)
 {
 	pipeline->bind(commandBuffer);
 
@@ -31,7 +31,8 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 
 		PushConstantData push{};
 		push.color = obj.color;
-		push.transform = obj.transform.matrix2();
+		// TODO push camera matrix to the GPU, do not do this in CPU
+		push.transform = camera.getProjection() * obj.transform.matrix();
 
 		vkCmdPushConstants(commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,

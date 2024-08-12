@@ -14,8 +14,8 @@ struct Transform {
 
 	//glm::mat4 rotation_matrix() const;
 
-	//glm::mat4 matrix();
-	glm::mat4 matrix2();
+	//glm::mat4 matrix2();
+	glm::mat4 matrix();
 };
 
 // Unity like

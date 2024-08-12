@@ -49,7 +49,7 @@
     return matrix;
 }*/
 
-/*glm::mat4 Transform::matrix()
+/*glm::mat4 Transform::matrix2()
 {
     auto matrix = glm::translate(glm::mat4{ 1.0f }, position);
     matrix = matrix * rotation_matrix();
@@ -58,7 +58,7 @@
 }*/
 
 // position * rotation.y * rotation.x * rotation.z * scale
-glm::mat4 Transform::matrix2()
+glm::mat4 Transform::matrix()
 {
 	const float s1 = glm::sin(rotation.y);
 	const float c1 = glm::cos(rotation.y);

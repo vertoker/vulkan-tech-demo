@@ -7,11 +7,13 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 	window = std::make_unique<VulkanWindow>(settings.screenWidth, settings.screenHeight, settings.name);
 	device = std::make_unique<VulkanDevice>(*window);
 	renderer = std::make_unique<VulkanRenderer>(*window, *device);
+    camera = std::make_unique<VulkanCamera>();
 	renderSystem = std::make_unique<SimpleRenderSystem>(*device, 
 		renderer->getSwapChainRenderPass(), 
 		settings.vertShaderPath, settings.fragShaderPath);
 
 	loadGameObjects();
+    camera->setOrthographicProjection(-1, 1, -1, 1, -5, 5);
 }
 VulkanApp::~VulkanApp()
 {
@@ -26,7 +28,7 @@ void VulkanApp::run()
 		// On Linux, you need another frame update method
 		if (auto commandBuffer = renderer->beginFrame()) {
 			renderer->beginSwapChainRenderPass(commandBuffer);
-			renderSystem->renderGameObjects(commandBuffer, gameObjects);
+			renderSystem->renderGameObjects(commandBuffer, gameObjects, *camera);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}

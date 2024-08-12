@@ -50,6 +50,7 @@ private:
 	std::unique_ptr<VulkanWindow> window;
 	std::unique_ptr<VulkanDevice> device;
 	std::unique_ptr<VulkanRenderer> renderer;
+	std::unique_ptr<VulkanCamera> camera;
 	std::unique_ptr<SimpleRenderSystem> renderSystem;
 
 	std::vector<GameObject> gameObjects;
