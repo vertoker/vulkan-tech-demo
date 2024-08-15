@@ -422,6 +422,7 @@ VkPresentModeKHR VulkanSwapChain::chooseSwapPresentMode(
     // No chain swap sync, produces lot of tearing in frames
     // - Advantages - low latency, usually supported
     // - Disadvantages - tearing, high powes consumption
+    // And it means GPU will be use in 100%, while FPS rise dramatically increase
     std::cout << "Present mode: Immediate" << std::endl;
     return VK_PRESENT_MODE_IMMEDIATE_KHR;
 }

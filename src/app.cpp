@@ -21,11 +21,18 @@ VulkanApp::~VulkanApp()
 
 void VulkanApp::run()
 {
+    auto currentTime = std::chrono::high_resolution_clock::now();
+
 	while (!window->shouldClose()) {
 		glfwPollEvents();
 
-        camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
+        auto newTime = std::chrono::high_resolution_clock::now();
+        float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+        currentTime = newTime;
+
+        //camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
+        camera->setViewYXZ(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
         float aspect = renderer->getAspectRatio();
         // height is constant, width is flexible
