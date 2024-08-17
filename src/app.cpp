@@ -20,6 +20,8 @@ VulkanApp::~VulkanApp()
 
 }
 
+const float MAX_FRAME_TIME = 0.25f;
+
 void VulkanApp::run()
 {
     auto currentTime = std::chrono::high_resolution_clock::now();
@@ -32,6 +34,8 @@ void VulkanApp::run()
         auto newTime = std::chrono::high_resolution_clock::now();
         float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
         currentTime = newTime;
+
+        deltaTime = glm::min(deltaTime, MAX_FRAME_TIME);
 
         keyboardInput->move(window->getPtr(), deltaTime, viewer);
 
@@ -116,7 +120,7 @@ void VulkanApp::loadGameObjects()
 
     auto cube = GameObject::createGameObject();
     cube.model = testModel;
-    cube.transform.position = { 0.0f, 0.0f, 2.5f };
+    cube.transform.position = { 0.0f, 0.0f, 1.0f };
     cube.transform.rotation = { 0.0f, 0.0f, 0.0f };
     //cube.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
     cube.transform.scale = { 0.5f, 0.5f, 0.5f };
