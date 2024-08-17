@@ -17,6 +17,7 @@ public:
 	bool shouldClose() { return glfwWindowShouldClose(window); }
 	bool wasWindowResized() { return framebufferResized; }
 	void resetWindowResizedFlag() { framebufferResized = false; }
+	GLFWwindow* getPtr() { return window; }
 
 	VkExtent2D getExtent() 
 	{

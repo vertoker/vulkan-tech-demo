@@ -9,8 +9,8 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& con
 	if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) rotate.x += 1.0f;
 	if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) rotate.x -= 1.0f;
 
-	// Simple method to check rotation is zero: dot product by itself
-	if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon)
+	// Simple method to check rotation is none zero: dot product by itself
+	if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon())
 		controller.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
 
 	const auto clampX = glm::radians<float>(85.0f);
@@ -32,8 +32,8 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& con
 	if (glfwGetKey(window, keys.moveUp) == GLFW_PRESS) moveDir += upDir;
 	if (glfwGetKey(window, keys.moveDown) == GLFW_PRESS) moveDir -= upDir;
 
-	// Simple method to check position is zero: dot product by itself
-	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon)
-		controller.transform.position += moveDir * dt * glm::normalize(moveDir);
+	// Simple method to check position is none zero: dot product by itself
+	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon())
+		controller.transform.position += moveSpeed * dt * glm::normalize(moveDir);
 	// finish starts with window.cpp
 }

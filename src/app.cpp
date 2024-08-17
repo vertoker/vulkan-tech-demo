@@ -11,6 +11,7 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 	renderSystem = std::make_unique<SimpleRenderSystem>(*device, 
 		renderer->getSwapChainRenderPass(), 
 		settings.vertShaderPath, settings.fragShaderPath);
+    keyboardInput = std::make_unique<InputKeyboardController>();
 
 	loadGameObjects();
 }
@@ -23,6 +24,8 @@ void VulkanApp::run()
 {
     auto currentTime = std::chrono::high_resolution_clock::now();
 
+    auto viewer = GameObject::createGameObject();
+
 	while (!window->shouldClose()) {
 		glfwPollEvents();
 
@@ -30,15 +33,17 @@ void VulkanApp::run()
         float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
         currentTime = newTime;
 
+        keyboardInput->move(window->getPtr(), deltaTime, viewer);
+
         //camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
-        camera->setViewYXZ(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+        camera->setViewYXZ(viewer.transform.position, viewer.transform.rotation);
 
         float aspect = renderer->getAspectRatio();
         // height is constant, width is flexible
         // right - left = aspect * (bottom - top) (y is inverted)
 
-        //camera->setOrthographicProjection(-aspect, aspect, -1, 1, -5, 5);
+        //camera->setOrthographicProjection(-aspect * 0.6f, aspect * 0.6f, -0.6f, 0.6f, -5, 5);
         camera->setPerspectiveProjection(glm::radians(70.0f), aspect, 0.0f, 10.0f);
 
 		// On Linux, resizing can be occurs wrong rendering

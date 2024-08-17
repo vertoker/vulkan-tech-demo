@@ -4,6 +4,7 @@
 #include "render/window.h"
 #include "render/renderer.h"
 #include "systems/simple_render_system.h"
+#include "input.h"
 
 // Libs
 #define GLM_FORCE_RADIANS
@@ -53,6 +54,7 @@ private:
 	std::unique_ptr<VulkanRenderer> renderer;
 	std::unique_ptr<VulkanCamera> camera;
 	std::unique_ptr<SimpleRenderSystem> renderSystem;
+	std::unique_ptr<InputKeyboardController> keyboardInput;
 
 	std::vector<GameObject> gameObjects;
 };
