@@ -35,6 +35,9 @@ void VulkanApp::run()
 
         keyboardInput->move(window->getPtr(), deltaTime, viewer);
 
+        std::cout << "position=" << viewer.transform.position_str() << std::endl;
+        std::cout << "rotation=" << viewer.transform.rotation_str() << std::endl;
+
         //camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
         camera->setViewYXZ(viewer.transform.position, viewer.transform.rotation);
@@ -44,7 +47,7 @@ void VulkanApp::run()
         // right - left = aspect * (bottom - top) (y is inverted)
 
         //camera->setOrthographicProjection(-aspect * 0.6f, aspect * 0.6f, -0.6f, 0.6f, -5, 5);
-        camera->setPerspectiveProjection(glm::radians(70.0f), aspect, 0.0f, 10.0f);
+        camera->setPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 10.0f);
 
 		// On Linux, resizing can be occurs wrong rendering
 		// On Linux, you need another frame update method
@@ -64,7 +67,7 @@ void VulkanApp::run()
 std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 offset) {
     glm::vec3 white{ 0.9f, 0.9f, 0.9f };
     glm::vec3 yellow{ 0.8f, 0.8f, 0.1f };
-    glm::vec3 orange{ 0.9f, 0.2f, 0.1f };
+    glm::vec3 orange{ 0.8f, 0.4f, 0.1f };
     glm::vec3 red{ 0.8f, 0.1f, 0.1f };
     glm::vec3 blue{ 0.1f, 0.1f, 0.8f };
     glm::vec3 green{ 0.1f, 0.8f, 0.1f };
@@ -82,19 +85,21 @@ std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 off
         // left face (white)
         {v8, white}, {v2, white}, {v4, white},
         {v8, white}, {v6, white}, {v2, white},
-        // right face (yellow)
+        // right face (yellow) // invert
         {v7, yellow}, {v3, yellow}, {v1, yellow},
         {v7, yellow}, {v1, yellow}, {v5, yellow},
-        // top face (orange)
+
+        // top face (orange) // invert
         {v8, orange}, {v4, orange}, {v3, orange},
         {v8, orange}, {v3, orange}, {v7, orange},
         // bottom face (red)
         {v6, red}, {v1, red}, {v2, red},
         {v6, red}, {v5, red}, {v1, red},
-        // nose face (blue)
+
+        // forward face (blue) // invert
         {v4, blue}, {v2, blue}, {v1, blue},
         {v4, blue}, {v1, blue}, {v3, blue},
-        // tail face (green)
+        // backward face (green)
         {v8, green}, {v5, green}, {v6, green},
         {v8, green}, {v7, green}, {v5, green},
     };
@@ -111,10 +116,10 @@ void VulkanApp::loadGameObjects()
 
     auto cube = GameObject::createGameObject();
     cube.model = testModel;
-    cube.transform.position = { 0.0f, 0.0f, 0.5f };
-    cube.transform.scale = { 0.5f, 0.5f, 0.5f };
+    cube.transform.position = { 0.0f, 0.0f, 2.5f };
     cube.transform.rotation = { 0.0f, 0.0f, 0.0f };
     //cube.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
+    cube.transform.scale = { 0.5f, 0.5f, 0.5f };
 
     gameObjects.push_back(std::move(cube));
 }

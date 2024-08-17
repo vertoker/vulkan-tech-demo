@@ -10,7 +10,7 @@ void VulkanCamera::setOrthographicProjection(float left, float right, float top,
 	
 	projectionMatrix[0][0] = 2.0f / (right - left);
 	projectionMatrix[1][1] = 2.0f / (bottom - top);
-	projectionMatrix[2][2] = 2.0f / (far - near);
+	projectionMatrix[2][2] = 1.0f / (far - near);
 
 	projectionMatrix[3][0] = -(right + left) / (right - left);
 	projectionMatrix[3][1] = -(bottom + top) / (bottom - top);
@@ -23,7 +23,7 @@ void VulkanCamera::setPerspectiveProjection(float verticalFOV, float aspect, flo
 	assert(glm::abs(aspect - std::numeric_limits<float>::epsilon()) > 0.0f);
 	// Constant for computation of matrix
 	const float tanHalfVerticalFOV = tan(verticalFOV / 2.0f);
-	projectionMatrix = glm::mat4{ 1.0f }; // identity matrix
+	projectionMatrix = glm::mat4{ 0.0f };
 
 	projectionMatrix[0][0] = 1.0f / (aspect * tanHalfVerticalFOV);
 	projectionMatrix[1][1] = 1.0f / tanHalfVerticalFOV;
@@ -88,7 +88,7 @@ void VulkanCamera::setViewYXZ(glm::vec3 position, glm::vec3 rotation)
 	viewMatrix[1][2] = w.y;
 	viewMatrix[2][2] = w.z;
 
-	viewMatrix[0][2] = -glm::dot(u, position);
-	viewMatrix[1][2] = -glm::dot(v, position);
-	viewMatrix[2][2] = -glm::dot(w, position);
+	viewMatrix[3][0] = -glm::dot(u, position);
+	viewMatrix[3][1] = -glm::dot(v, position);
+	viewMatrix[3][2] = -glm::dot(w, position);
 }

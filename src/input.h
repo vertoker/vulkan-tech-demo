@@ -27,5 +27,5 @@ public:
 
 	KeyMappings keys{};
 	float moveSpeed{ 0.3f };
-	float lookSpeed{ 1.5f };
+	float lookSpeed{ 0.8f };
 };

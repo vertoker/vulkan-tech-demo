@@ -13,8 +13,7 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& con
 	if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon())
 		controller.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
 
-	const auto clampX = glm::radians<float>(85.0f);
-	controller.transform.rotation.x += glm::clamp(controller.transform.rotation.x, clampX, clampX);
+	controller.transform.rotation.x = glm::clamp(controller.transform.rotation.x, -1.5f, 1.5f);
 	// mod = repeat, but for both directions
 	controller.transform.rotation.y = glm::mod(controller.transform.rotation.y, glm::two_pi<float>());
 
@@ -35,5 +34,4 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& con
 	// Simple method to check position is none zero: dot product by itself
 	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon())
 		controller.transform.position += moveSpeed * dt * glm::normalize(moveDir);
-	// finish starts with window.cpp
 }
