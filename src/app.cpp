@@ -39,8 +39,8 @@ void VulkanApp::run()
 
         keyboardInput->move(window->getPtr(), deltaTime, viewer);
 
-        std::cout << "position=" << viewer.transform.position_str() << std::endl;
-        std::cout << "rotation=" << viewer.transform.rotation_str() << std::endl;
+        //std::cout << "position=" << viewer.transform.position_str() << std::endl;
+        //std::cout << "rotation=" << viewer.transform.rotation_str() << std::endl;
 
         //camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
@@ -85,7 +85,9 @@ std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 off
     glm::vec3 v7{  0.5f, -0.5f, -0.5f };
     glm::vec3 v8{ -0.5f, -0.5f, -0.5f };
 
-    std::vector<VulkanModel::Vertex> vertices {
+    VulkanModel::Builder builder{};
+
+    builder.vertices = {
         // left face (white)
         {v8, white}, {v2, white}, {v4, white},
         {v8, white}, {v6, white}, {v2, white},
@@ -108,10 +110,10 @@ std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 off
         {v8, green}, {v7, green}, {v5, green},
     };
 
-    for (auto& v : vertices)
+    for (auto& v : builder.vertices)
         v.position += offset;
 
-    return std::make_unique<VulkanModel>(device, vertices);
+    return std::make_unique<VulkanModel>(device, builder);
 }
 
 void VulkanApp::loadGameObjects()

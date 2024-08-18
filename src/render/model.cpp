@@ -1,23 +1,29 @@
 #include "model.h"
 
-VulkanModel::VulkanModel(VulkanDevice& device, const std::vector<Vertex>& vertices)
-	: device(device)
+VulkanModel::VulkanModel(VulkanDevice& device, const Builder& builder) : device(device)
 {
-	createVertexBuffers(vertices);
+	createVertexBuffers(builder.vertices);
+	createIndexBuffers(builder.indices);
 }
 VulkanModel::~VulkanModel()
 {
 	vkDestroyBuffer(device.device(), vertexBuffer, nullptr);
 	vkFreeMemory(device.device(), vertexBufferMemory, nullptr);
+
+	if (hasIndexBuffer) {
+		vkDestroyBuffer(device.device(), indexBuffer, nullptr);
+		vkFreeMemory(device.device(), indexBufferMemory, nullptr);
+	}
 }
 
 void VulkanModel::createVertexBuffers(const std::vector<Vertex>& vertices)
 {
 	vertexCount = static_cast<uint32_t>(vertices.size());
+	VkDeviceSize bufferSize = sizeof(Vertex) * vertexCount;
 	assert(vertexCount >= 3 && "Vertex count must be at least 3");
-	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertexCount;
+
 	// Host = CPU, Device = GPU
-	// Create buffer, which connect CPU and GPU memory
+	// Create buffer on GPU (Device)
 	device.createBuffer(bufferSize, 
 		VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | 
@@ -29,7 +35,7 @@ void VulkanModel::createVertexBuffers(const std::vector<Vertex>& vertices)
 
 	// Create abstract pointer
 	void* data;
-	// Bind pointer to the CPU buffer in Vulkan
+	// Bind pointer to the CPU buffer in Vulkan, which connects CPU and GPU buffers
 	vkMapMemory(device.device(), vertexBufferMemory, 0, bufferSize, 0, &data);
 	// Copy vertices to the pointer, which already binded to the Vulkan
 	// Memory will be transferred to the GPU on the next frame update (Flush())
@@ -38,16 +44,42 @@ void VulkanModel::createVertexBuffers(const std::vector<Vertex>& vertices)
 	vkUnmapMemory(device.device(), vertexBufferMemory);
 }
 
+void VulkanModel::createIndexBuffers(const std::vector<uint32_t>& indices)
+{
+	indexCount = static_cast<uint32_t>(indices.size());
+	hasIndexBuffer = indexCount > 0;
+	if (!hasIndexBuffer) { return; }
+
+	VkDeviceSize bufferSize = sizeof(uint32_t) * indexCount;
+	device.createBuffer(bufferSize, 
+		VK_BUFFER_USAGE_INDEX_BUFFER_BIT,
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | 
+		VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+		indexBuffer, indexBufferMemory
+	);
+
+	void* data;
+	vkMapMemory(device.device(), indexBufferMemory, 0, bufferSize, 0, &data);
+	memcpy(data, indices.data(), static_cast<size_t>(bufferSize));
+	vkUnmapMemory(device.device(), indexBufferMemory);
+}
+
 void VulkanModel::bind(VkCommandBuffer commandBuffer)
 {
 	VkBuffer buffers[] = { vertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
-
 	vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
+
+	if (hasIndexBuffer) // same as buffer value size - uint32
+		vkCmdBindIndexBuffer(commandBuffer, indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+	// uint16_t -> 2^16 - 1 = 65,535 vertices
+	// uint32_t -> 2^32 - 1 = 4,294,967,295 vertices
 }
 void VulkanModel::draw(VkCommandBuffer commandBuffer)
 {
-	vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
+	if (hasIndexBuffer)
+		vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
+	else vkCmdDraw(commandBuffer, vertexCount, 1, 0, 0);
 }
 
 std::vector<VkVertexInputBindingDescription> VulkanModel::Vertex::getBindingDescriptions()
