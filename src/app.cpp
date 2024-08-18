@@ -87,27 +87,36 @@ std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 off
 
     VulkanModel::Builder builder{};
 
+    // per vertex -> per color
     builder.vertices = {
         // left face (white)
-        {v8, white}, {v2, white}, {v4, white},
-        {v8, white}, {v6, white}, {v2, white},
+        {v8, white}, {v2, white}, {v4, white}, {v6, white},
         // right face (yellow) // invert
-        {v7, yellow}, {v3, yellow}, {v1, yellow},
-        {v7, yellow}, {v1, yellow}, {v5, yellow},
+        {v7, yellow}, {v1, yellow}, {v3, yellow}, {v5, yellow},
 
         // top face (orange) // invert
-        {v8, orange}, {v4, orange}, {v3, orange},
-        {v8, orange}, {v3, orange}, {v7, orange},
+        {v8, orange}, {v3, orange}, {v4, orange}, {v7, orange},
         // bottom face (red)
-        {v6, red}, {v1, red}, {v2, red},
-        {v6, red}, {v5, red}, {v1, red},
+        {v6, red}, {v1, red}, {v2, red}, {v5, red},
 
         // forward face (blue) // invert
-        {v4, blue}, {v2, blue}, {v1, blue},
-        {v4, blue}, {v1, blue}, {v3, blue},
+        {v4, blue}, {v1, blue}, {v2, blue}, {v3, blue},
         // backward face (green)
-        {v8, green}, {v5, green}, {v6, green},
-        {v8, green}, {v7, green}, {v5, green},
+        {v8, green}, {v5, green}, {v6, green}, {v7, green},
+    };
+    builder.indices = {
+        // left face (0-3)
+        0, 1, 2, 0, 3, 1,
+        // right face (4-7) // invert
+        4, 6, 5, 4, 5, 7,
+        // top face (8-11) // invert
+        8, 10, 9, 8, 9, 11,
+        // bottom face (12-15)
+        12, 13, 14, 12, 15, 13,
+        // forward face (16-19) // invert
+        16, 18, 17, 16, 17, 19,
+        // backward face (20-23)
+        20, 21, 22, 20, 23, 21
     };
 
     for (auto& v : builder.vertices)
