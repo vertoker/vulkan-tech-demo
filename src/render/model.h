@@ -2,6 +2,9 @@
 
 #include "device.h"
 
+// libs
+#include <tiny_obj_loader.h>
+
 // GLM
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
