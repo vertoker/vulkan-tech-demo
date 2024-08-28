@@ -13,16 +13,16 @@ VulkanAppSettings createAppSettings() {
     VulkanAppSettings appSettings{};
 
     auto path = boost::dll::program_location().parent_path().generic_path().string();
-    path = path + "/resources/ShaderCache/";
-    appSettings.vertShaderPath = path + std::string("simple.vert.spv");
-    appSettings.fragShaderPath = path + std::string("simple.frag.spv");
+    auto shaders = path + "/resources/ShaderCache/";
+    auto models = path + "/resources/models/";
+    appSettings.vertShaderPath = shaders + std::string("simple.vert.spv");
+    appSettings.fragShaderPath = shaders + std::string("simple.frag.spv");
+    appSettings.modelPath = models + std::string("cube-colored.obj");
 
     return appSettings;
 }
 
 int main() {
-    Log("Start app");
-
 #if _DEBUG
     Log("Mode = Debug");
 #else

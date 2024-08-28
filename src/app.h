@@ -26,6 +26,7 @@ public:
 
 	std::string vertShaderPath;
 	std::string fragShaderPath;
+	std::string modelPath;
 };
 
 struct PushConstantData {
@@ -47,7 +48,7 @@ public:
 	void run();
 
 private:
-	void loadGameObjects();
+	void loadGameObjects(const std::string& modelPath);
 
 	std::unique_ptr<VulkanWindow> window;
 	std::unique_ptr<VulkanDevice> device;

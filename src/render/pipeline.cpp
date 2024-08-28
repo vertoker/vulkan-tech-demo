@@ -141,7 +141,7 @@ void VulkanPipeline::defaultConfigInfo(PipelineConfigInfo& configInfo)
 	// Mode for culling triangle (usually cull only back)
 	configInfo.rasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	// What is Vulkan will be interpretent as front face (always set clockwise)
-	configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	configInfo.rasterizationInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	// Optional Depth Bias (blur for shadows or triangles)
 	configInfo.rasterizationInfo.depthBiasEnable = VK_FALSE;
 	configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0f;

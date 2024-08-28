@@ -2,19 +2,22 @@
 
 #include "device.h"
 
-// libs
-#include <tiny_obj_loader.h>
-
 // GLM
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
+// std
+#include <memory>
+#include <vector>
+
 class VulkanModel {
 public:
 	struct Vertex {
-		glm::vec3 position;
-		glm::vec3 color;
+		glm::vec3 position{};
+		glm::vec3 color{};
+		glm::vec3 normal{};
+		glm::vec2 uv{};
 
 		static std::vector<VkVertexInputBindingDescription> getBindingDescriptions();
 		static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
@@ -23,6 +26,8 @@ public:
 	struct Builder {
 		std::vector<Vertex> vertices{};
 		std::vector<uint32_t> indices{};
+
+		void loadModel(const std::string& filepath);
 	};
 
 	VulkanModel(VulkanDevice& device, const Builder& builder);
@@ -30,6 +35,8 @@ public:
 
 	VulkanModel(const VulkanModel&) = delete;
 	VulkanModel& operator=(const VulkanModel&) = delete;
+
+	static std::unique_ptr<VulkanModel> createModelFromFile(VulkanDevice& device, const std::string& filepath);
 
 	void bind(VkCommandBuffer commandBuffer);
 	void draw(VkCommandBuffer commandBuffer);

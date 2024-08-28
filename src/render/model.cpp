@@ -1,5 +1,14 @@
 #include "model.h"
 
+// libs
+#define TINYOBJLOADER_IMPLEMENTATION // part of impl for this loader
+#include <tiny_obj_loader.h>
+
+// std
+#include <cassert>
+#include <cstring>
+#include <iostream>
+
 VulkanModel::VulkanModel(VulkanDevice& device, const Builder& builder) : device(device)
 {
 	createVertexBuffers(builder.vertices);
@@ -142,4 +151,76 @@ std::vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::getAttribute
 	attribureDescriptions[1].offset = offsetof(Vertex, color);
 
 	return attribureDescriptions;
+}
+
+std::unique_ptr<VulkanModel> VulkanModel::createModelFromFile(VulkanDevice& device, const std::string& filepath)
+{
+	Builder builder{};
+	builder.loadModel(filepath);
+	std::cout << "Loaded model, vertex count: " << builder.vertices.size() << 
+		", indices count: " << builder.indices.size() << std::endl;
+	return std::make_unique<VulkanModel>(device, builder);
+}
+
+void VulkanModel::Builder::loadModel(const std::string& filepath)
+{
+	tinyobj::attrib_t attrib; // pos/color/normal/texture data
+	std::vector<tinyobj::shape_t> shapes; // indices for each face element
+	std::vector<tinyobj::material_t> materials; // materials data (later)
+	std::string warn, err;
+
+	if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, filepath.c_str()))
+		throw std::runtime_error(warn + err);
+
+	vertices.clear();
+	indices.clear();
+
+	for (const auto &shape : shapes) {
+		for (const auto& index : shape.mesh.indices) {
+			Vertex vertex{};
+
+			// if below 0 - no indices is provided
+			if (index.vertex_index >= 0) {
+				// data stores as float array, not vec3 array
+				vertex.position = { 
+					attrib.vertices[3 * index.vertex_index + 0],
+					attrib.vertices[3 * index.vertex_index + 1],
+					attrib.vertices[3 * index.vertex_index + 2],
+				};
+
+				// this is optional support of colors: right after vertices
+				auto colorIndex = 3 * index.vertex_index + 2;
+				// check if colors by that index exists
+				if (colorIndex < attrib.colors.size()) {
+					vertex.color = {
+						// because it starts from end
+						attrib.colors[colorIndex - 2],
+						attrib.colors[colorIndex - 1],
+						attrib.colors[colorIndex - 0],
+					};
+				} else {
+					vertex.color = { 1.0f, 1.0f, 1.0f };
+				}
+			}
+
+			// same but for normals
+			if (index.normal_index >= 0) {
+				vertex.normal = { 
+					attrib.normals[3 * index.normal_index + 0],
+					attrib.normals[3 * index.normal_index + 1],
+					attrib.normals[3 * index.normal_index + 2],
+				};
+			}
+
+			// same but for textures
+			if (index.texcoord_index >= 0) {
+				vertex.uv = { 
+					attrib.texcoords[2 * index.texcoord_index + 0],
+					attrib.texcoords[2 * index.texcoord_index + 1],
+				};
+			}
+
+			vertices.push_back(vertex);
+		}
+	}
 }

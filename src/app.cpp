@@ -13,7 +13,7 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 		settings.vertShaderPath, settings.fragShaderPath);
     keyboardInput = std::make_unique<InputKeyboardController>();
 
-	loadGameObjects();
+	loadGameObjects(settings.modelPath);
 }
 VulkanApp::~VulkanApp()
 {
@@ -67,74 +67,16 @@ void VulkanApp::run()
 	vkDeviceWaitIdle(device->device());
 }
 
-
-std::unique_ptr<VulkanModel> createCubeModel(VulkanDevice& device, glm::vec3 offset) {
-    glm::vec3 white{ 0.9f, 0.9f, 0.9f };
-    glm::vec3 yellow{ 0.8f, 0.8f, 0.1f };
-    glm::vec3 orange{ 0.8f, 0.4f, 0.1f };
-    glm::vec3 red{ 0.8f, 0.1f, 0.1f };
-    glm::vec3 blue{ 0.1f, 0.1f, 0.8f };
-    glm::vec3 green{ 0.1f, 0.8f, 0.1f };
-
-    glm::vec3 v1{  0.5f,  0.5f,  0.5f };
-    glm::vec3 v2{ -0.5f,  0.5f,  0.5f };
-    glm::vec3 v3{  0.5f, -0.5f,  0.5f };
-    glm::vec3 v4{ -0.5f, -0.5f,  0.5f };
-    glm::vec3 v5{  0.5f,  0.5f, -0.5f };
-    glm::vec3 v6{ -0.5f,  0.5f, -0.5f };
-    glm::vec3 v7{  0.5f, -0.5f, -0.5f };
-    glm::vec3 v8{ -0.5f, -0.5f, -0.5f };
-
-    VulkanModel::Builder builder{};
-
-    // per vertex -> per color
-    builder.vertices = {
-        // left face (white)
-        {v8, white}, {v2, white}, {v4, white}, {v6, white},
-        // right face (yellow) // invert
-        {v7, yellow}, {v1, yellow}, {v3, yellow}, {v5, yellow},
-
-        // top face (orange) // invert
-        {v8, orange}, {v3, orange}, {v4, orange}, {v7, orange},
-        // bottom face (red)
-        {v6, red}, {v1, red}, {v2, red}, {v5, red},
-
-        // forward face (blue) // invert
-        {v4, blue}, {v1, blue}, {v2, blue}, {v3, blue},
-        // backward face (green)
-        {v8, green}, {v5, green}, {v6, green}, {v7, green},
-    };
-    builder.indices = {
-        // left face (0-3)
-        0, 1, 2, 0, 3, 1,
-        // right face (4-7) // invert
-        4, 6, 5, 4, 5, 7,
-        // top face (8-11) // invert
-        8, 10, 9, 8, 9, 11,
-        // bottom face (12-15)
-        12, 13, 14, 12, 15, 13,
-        // forward face (16-19) // invert
-        16, 18, 17, 16, 17, 19,
-        // backward face (20-23)
-        20, 21, 22, 20, 23, 21
-    };
-
-    for (auto& v : builder.vertices)
-        v.position += offset;
-
-    return std::make_unique<VulkanModel>(device, builder);
-}
-
-void VulkanApp::loadGameObjects()
+void VulkanApp::loadGameObjects(const std::string& modelPath)
 {
-    std::shared_ptr<VulkanModel> testModel = createCubeModel(*device, { 0.0f, 0.0f, 0.0f });
+    std::shared_ptr<VulkanModel> testModel = VulkanModel::createModelFromFile(*device, modelPath);
 
-    auto cube = GameObject::createGameObject();
-    cube.model = testModel;
-    cube.transform.position = { 0.0f, 0.0f, 1.0f };
-    cube.transform.rotation = { 0.0f, 0.0f, 0.0f };
-    //cube.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
-    cube.transform.scale = { 0.5f, 0.5f, 0.5f };
+    auto gameObj = GameObject::createGameObject();
+    gameObj.model = testModel;
+    gameObj.transform.position = { 0.0f, 0.0f, 1.0f };
+    gameObj.transform.rotation = { 0.0f, 0.0f, 0.0f };
+    //gameObj.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
+    gameObj.transform.scale = { 0.25f, 0.25f, 0.25f };
 
-    gameObjects.push_back(std::move(cube));
+    gameObjects.push_back(std::move(gameObj));
 }
