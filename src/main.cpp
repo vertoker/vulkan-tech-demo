@@ -17,7 +17,7 @@ VulkanAppSettings createAppSettings() {
     auto models = path + "/resources/models/";
     appSettings.vertShaderPath = shaders + std::string("simple.vert.spv");
     appSettings.fragShaderPath = shaders + std::string("simple.frag.spv");
-    appSettings.modelPath = models + std::string("cube-colored.obj");
+    appSettings.modelPath = models + std::string("keyboard.obj");
 
     return appSettings;
 }

@@ -76,7 +76,7 @@ void VulkanApp::loadGameObjects(const std::string& modelPath)
     gameObj.transform.position = { 0.0f, 0.0f, 1.0f };
     gameObj.transform.rotation = { 0.0f, 0.0f, 0.0f };
     //gameObj.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
-    gameObj.transform.scale = { 0.25f, 0.25f, 0.25f };
+    gameObj.transform.scale = { 0.05f, 0.05f, 0.05f };
 
     gameObjects.push_back(std::move(gameObj));
 }
