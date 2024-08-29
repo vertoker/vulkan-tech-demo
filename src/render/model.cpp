@@ -1,13 +1,28 @@
 #include "model.h"
+#include "utils.h"
 
 // libs
 #define TINYOBJLOADER_IMPLEMENTATION // part of impl for this loader
 #include <tiny_obj_loader.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
 
 // std
 #include <cassert>
 #include <cstring>
 #include <iostream>
+#include <unordered_map>
+
+namespace std {
+	template <>
+	struct hash<VulkanModel::Vertex> {
+		size_t operator()(VulkanModel::Vertex const& vertex) const {
+			size_t seed = 0;
+			hashCombine(seed, vertex.position, vertex.color, vertex.normal, vertex.uv);
+			return seed;
+		}
+	};
+}
 
 VulkanModel::VulkanModel(VulkanDevice& device, const Builder& builder) : device(device)
 {
@@ -175,6 +190,9 @@ void VulkanModel::Builder::loadModel(const std::string& filepath)
 	vertices.clear();
 	indices.clear();
 
+	// this for building own indices, using model
+	std::unordered_map<Vertex, uint32_t> uniqueVertices{};
+
 	for (const auto &shape : shapes) {
 		for (const auto& index : shape.mesh.indices) {
 			Vertex vertex{};
@@ -220,7 +238,14 @@ void VulkanModel::Builder::loadModel(const std::string& filepath)
 				};
 			}
 
-			vertices.push_back(vertex);
+			if (!uniqueVertices.contains(vertex)) {
+				// push unique index of vertex if no founded
+				uniqueVertices[vertex] = static_cast<uint32_t>(vertices.size());
+				// and also into vertices vector
+				vertices.push_back(vertex);
+			}
+			// and push index of unique vertex for indices vertor
+			indices.push_back(uniqueVertices[vertex]);
 		}
 	}
 }
