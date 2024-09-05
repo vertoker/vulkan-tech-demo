@@ -151,19 +151,12 @@ std::vector<VkVertexInputBindingDescription> VulkanModel::Vertex::getBindingDesc
 }
 std::vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::getAttributeDescriptions()
 {
-	std::vector<VkVertexInputAttributeDescription> attribureDescriptions(2);
+	std::vector<VkVertexInputAttributeDescription> attribureDescriptions{};
 
-	// For position
-	attribureDescriptions[0].location = 0;
-	attribureDescriptions[0].binding = 0;
-	attribureDescriptions[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attribureDescriptions[0].offset = offsetof(Vertex, position);
-
-	// For color
-	attribureDescriptions[1].location = 1;
-	attribureDescriptions[1].binding = 0;
-	attribureDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attribureDescriptions[1].offset = offsetof(Vertex, color);
+	attribureDescriptions.push_back({ 0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, position) });
+	attribureDescriptions.push_back({ 1, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, color) });
+	attribureDescriptions.push_back({ 2, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(Vertex, normal) });
+	attribureDescriptions.push_back({ 3, 0, VK_FORMAT_R32G32_SFLOAT, offsetof(Vertex, uv) });
 
 	return attribureDescriptions;
 }
@@ -206,19 +199,11 @@ void VulkanModel::Builder::loadModel(const std::string& filepath)
 					attrib.vertices[3 * index.vertex_index + 2],
 				};
 
-				// this is optional support of colors: right after vertices
-				auto colorIndex = 3 * index.vertex_index + 2;
-				// check if colors by that index exists
-				if (colorIndex < attrib.colors.size()) {
-					vertex.color = {
-						// because it starts from end
-						attrib.colors[colorIndex - 2],
-						attrib.colors[colorIndex - 1],
-						attrib.colors[colorIndex - 0],
-					};
-				} else {
-					vertex.color = { 1.0f, 1.0f, 1.0f };
-				}
+				vertex.color = {
+					attrib.colors[3 * index.vertex_index + 0],
+					attrib.colors[3 * index.vertex_index + 1],
+					attrib.colors[3 * index.vertex_index + 2],
+				};
 			}
 
 			// same but for normals

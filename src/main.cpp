@@ -17,7 +17,8 @@ VulkanAppSettings createAppSettings() {
     auto models = path + "/resources/models/";
     appSettings.vertShaderPath = shaders + std::string("simple.vert.spv");
     appSettings.fragShaderPath = shaders + std::string("simple.frag.spv");
-    appSettings.modelPath = models + std::string("flat-vase.obj");//keyboard
+    appSettings.modelPath = models + std::string("flat-vase.obj");
+    //keyboard smooth-vase flat-vase
 
     return appSettings;
 }
