@@ -9,7 +9,7 @@ layout(location = 0) in vec3 fragColor;
 // You must use only ONE constant per shader entry point
 layout(push_constant) uniform Push {
 	mat4 transform;
-	mat4 modelMatrix;
+	mat4 normalMatrix;
 } push;
 
 // Output

@@ -21,6 +21,7 @@ struct Transform {
 
 	//glm::mat4 matrix2();
 	glm::mat4 matrix();
+	glm::mat3 normalMatrix();
 };
 
 // Unity like

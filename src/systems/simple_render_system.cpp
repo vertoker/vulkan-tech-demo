@@ -3,7 +3,7 @@
 struct PushConstantData {
 	glm::mat4 transform{ 1.f }; // projection * view * model
 	// alignas is for memory specification for shader declaration
-	glm::mat4 modelMatrix{ 1.f };
+	glm::mat4 normalMatrix{ 1.f };
 };
 
 SimpleRenderSystem::SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, 
@@ -33,10 +33,9 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 		//obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.005f, 1.0f);
 
 		PushConstantData push{};
-		auto modelMatrix = obj.transform.matrix();
 		// TODO push camera matrix to the GPU, do not do this in CPU
-		push.transform = projectionView * modelMatrix;
-		push.modelMatrix = modelMatrix;
+		push.transform = projectionView * obj.transform.matrix();
+		push.normalMatrix = obj.transform.normalMatrix();
 
 		vkCmdPushConstants(commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
