@@ -34,7 +34,11 @@ void main() {
 
 	// convert mat4 to mat3 remove translation, stayed only direction, which needed for
 	// calculating object space normal to world space normal
-	vec3 normalWorldSpace = normalize(mat3(push.modelMatrix) * normal);
+	// works only if sx == sy == sz
+	//vec3 normalWorldSpace = normalize(mat3(push.modelMatrix) * normal);
+
+	mat3 normalMatrix = transpose(inverse(mat3(push.modelMatrix)));
+	vec3 normalWorldSpace = normalize(normalMatrix * normal);
 
 	float lightIntensity = AMBIENT + max(dot(normalWorldSpace, DIRECTION_TO_LIGHT), 0);
 
