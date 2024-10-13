@@ -1,6 +1,9 @@
 {
   "dependencies": [
     "boost-dll",
-    "tinyobjloader"
+    "tinyobjloader",
+    "glfw3",
+    "glm",
+    "vulkan"
   ]
 }

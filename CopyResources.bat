@@ -5,8 +5,8 @@ set PROJECT_PATH=%cd%\
 set RESOURCES=%cd%\resources\
 
 rem Build folders
-set DEBUG_BUILD=%cd%\out\build\x64-Debug\resources\
-set RELEASE_BUILD=%cd%\out\build\x64-Release\resources\
+set DEBUG_BUILD=%cd%\out\Debug\resources\
+set RELEASE_BUILD=%cd%\out\Release\resources\
 
 @echo on
 
