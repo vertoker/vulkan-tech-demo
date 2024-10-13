@@ -1,8 +1,10 @@
 
+// app
 #include "app.h"
-#include "utility/log.h"
 
-#include "boost/dll.hpp"
+// libraries
+#include <fmt/core.h>
+#include <boost/dll.hpp>
 
 // std
 #include <cstdlib>
@@ -25,9 +27,9 @@ VulkanAppSettings createAppSettings() {
 
 int main() {
 #if _DEBUG
-    Log("Mode = Debug");
+    fmt::print("Mode = Debug");
 #else
-    Log("Mode = Release");
+    fmt::print("Mode = Release");
 #endif
 
     auto appSettings = createAppSettings();
@@ -45,6 +47,6 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    Log("Stop app");
+    fmt::print("Stop app");
     return EXIT_SUCCESS;
 }

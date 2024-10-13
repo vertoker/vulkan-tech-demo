@@ -4,6 +4,7 @@
     "tinyobjloader",
     "glfw3",
     "glm",
-    "vulkan"
+    "vulkan",
+    "fmt"
   ]
 }

@@ -42,6 +42,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_
 # add_subdirectory("lib/glm")
 
 # Add Package libraries (vcpkg)
+find_package(fmt CONFIG REQUIRED)
 find_package(boost_dll CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
@@ -52,6 +53,7 @@ find_package(Vulkan REQUIRED)
 # target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw)
 
 # Link Package Libraries
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE fmt::fmt)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Boost::dll)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glm::glm)
