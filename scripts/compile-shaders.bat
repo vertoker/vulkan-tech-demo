@@ -1,6 +1,8 @@
 @echo off
 rem Compile shaders before start
 
+cd ..
+
 set PROJECT_PATH=%cd%\
 set RESOURCES_INPUT=%cd%\src\shaders\
 set RESOURCES_OUTPUT=%cd%\resources\ShaderCache\

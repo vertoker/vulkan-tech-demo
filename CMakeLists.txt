@@ -73,7 +73,14 @@ if (DISABLE_CONSOLE)
 	# For others idk how to solve this, search through the internet or something
 endif()
 
-# Shader compilation
-if (WIN32)
-	execute_process(COMMAND "${CMAKE_PROJECT_NAME}/CompileShaders.bat")
+# Scripts execution
+
+if (WIN32)#TODO
+	execute_process(COMMAND "${CMAKE_PROJECT_NAME}/scripts/compile-shaders.bat")
+	execute_process(COMMAND "${CMAKE_PROJECT_NAME}/scripts/copy-resources.bat")
 endif (WIN32)
+
+if (UNIX)
+	execute_process(COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/scripts/compile-shaders.sh")
+	execute_process(COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy-resources.sh")
+endif (UNIX)

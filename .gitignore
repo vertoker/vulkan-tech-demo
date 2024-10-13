@@ -3,7 +3,10 @@
 bin/
 build/
 builds/
+
+# IDE meta files
 /.vs
+/.vscode
 .idea/
 
 # Files
