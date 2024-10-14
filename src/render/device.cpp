@@ -8,6 +8,7 @@
 #include <set>
 #include <unordered_set>
 
+#pragma region debugger
 // debugging layer from inside Vulkan
 static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -40,6 +41,7 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance,
         func(instance, debugMessenger, pAllocator);
     }
 }
+#pragma endregion debugger
 
 // constructor, start point for Vulkan API
 VulkanDevice::VulkanDevice(VulkanWindow& window) : window{ window } {
@@ -48,7 +50,7 @@ VulkanDevice::VulkanDevice(VulkanWindow& window) : window{ window } {
     setupDebugMessenger();
     createSurface();
     pickPhysicalDevice();
-    createLogicalDevice();
+    createDevice();
     createCommandPool();
 }
 // destructor, mostly for Vulkan structures
@@ -133,7 +135,7 @@ void VulkanDevice::pickPhysicalDevice() {
     std::cout << "Physical device: " << properties.deviceName << std::endl;
 }
 
-void VulkanDevice::createLogicalDevice() {
+void VulkanDevice::createDevice() {
     QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
     std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;

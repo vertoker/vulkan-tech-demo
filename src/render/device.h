@@ -77,7 +77,7 @@ private:
     void setupDebugMessenger();
     void createSurface();
     void pickPhysicalDevice();
-    void createLogicalDevice();
+    void createDevice();
     void createCommandPool();
 
     // helper functions
