@@ -1,5 +1,5 @@
-#include "render/model.h"
-#include "utils.h"
+#include "render/model.hpp"
+#include "utils.hpp"
 
 // libs
 #define TINYOBJLOADER_IMPLEMENTATION // part of impl for this loader

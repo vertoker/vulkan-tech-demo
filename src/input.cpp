@@ -1,4 +1,4 @@
-#include "input.h"
+#include "input.hpp"
 
 void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& controller)
 {

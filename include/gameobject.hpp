@@ -1,6 +1,6 @@
 #pragma once
 
-#include "render/model.h"
+#include "render/model.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 // std

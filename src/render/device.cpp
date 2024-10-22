@@ -1,6 +1,6 @@
 // Written by Brendan Galea
 // Refactored by vertoker
-#include "render/device.h"
+#include "render/device.hpp"
 
 // std headers
 #include <cstring>

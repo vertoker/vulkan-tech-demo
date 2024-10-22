@@ -1,6 +1,6 @@
 // Written by Brendan Galea
 // Refactored by vertoker
-#include "render/swapchain.h"
+#include "render/swapchain.hpp"
 
 // std
 #include <array>

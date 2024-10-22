@@ -1,9 +1,9 @@
 #pragma once
 
-#include "render/device.h"
-#include "render/pipeline.h"
-#include "gameobject.h"
-#include "render/camera.h"
+#include "render/device.hpp"
+#include "render/pipeline.hpp"
+#include "gameobject.hpp"
+#include "render/camera.hpp"
 
 // Libs
 #define GLM_FORCE_RADIANS

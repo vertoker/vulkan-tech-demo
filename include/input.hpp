@@ -1,7 +1,7 @@
 #pragma once
 
-#include "gameobject.h"
-#include "render/window.h"
+#include "gameobject.hpp"
+#include "render/window.hpp"
 
 // std
 #include <limits>

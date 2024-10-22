@@ -1,5 +1,5 @@
-#include "render/pipeline.h"
-#include "render/model.h"
+#include "render/pipeline.hpp"
+#include "render/model.hpp"
 
 // std
 #include <cassert>

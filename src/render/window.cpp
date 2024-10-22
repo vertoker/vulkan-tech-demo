@@ -1,4 +1,4 @@
-#include "render/window.h"
+#include "render/window.hpp"
 
 // std
 #include <stdexcept>

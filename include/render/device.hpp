@@ -2,7 +2,7 @@
 // Refactored by vertoker
 #pragma once
 
-#include "window.h"
+#include "window.hpp"
 
 // std lib headers
 #include <string>

@@ -1,4 +1,4 @@
-#include "render/camera.h"
+#include "render/camera.hpp"
 
 // std
 #include <cassert>

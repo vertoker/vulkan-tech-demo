@@ -1,4 +1,4 @@
-#include "gameobject.h"
+#include "gameobject.hpp"
 #include <glm/gtc/quaternion.hpp>
 
 /*glm::mat4 Transform::rotation_matrix() const

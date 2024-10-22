@@ -1,10 +1,10 @@
 #pragma once
 
-#include "gameobject.h"
-#include "render/window.h"
-#include "render/renderer.h"
-#include "input.h"
-#include "systems/simple_render_system.h"
+#include "gameobject.hpp"
+#include "render/window.hpp"
+#include "render/renderer.hpp"
+#include "input.hpp"
+#include "systems/simple_render_system.hpp"
 
 // Libs
 #define GLM_FORCE_RADIANS

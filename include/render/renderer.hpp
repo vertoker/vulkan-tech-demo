@@ -1,7 +1,7 @@
 #pragma once
 
-#include "window.h"
-#include "swapchain.h"
+#include "window.hpp"
+#include "swapchain.hpp"
 
 // Libs
 #define GLM_FORCE_RADIANS

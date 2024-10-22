@@ -1,6 +1,6 @@
 #pragma once
 
-#include "device.h"
+#include "device.hpp"
 
 // std
 #include <string>

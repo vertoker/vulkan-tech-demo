@@ -1,6 +1,6 @@
 #pragma once
 
-#include "device.h"
+#include "device.hpp"
 
 // GLM
 #define GLM_FORCE_RADIANS
