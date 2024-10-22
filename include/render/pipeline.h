@@ -37,8 +37,7 @@ public:
 		const std::string& vertFilePath,
 		const std::string& fragFilePath);
 	~VulkanPipeline();
-
-	VulkanPipeline() = default;
+	
 	VulkanPipeline(const VulkanPipeline&) = delete;
 	VulkanPipeline& operator=(const VulkanPipeline&) = delete;
 

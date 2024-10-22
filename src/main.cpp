@@ -27,9 +27,9 @@ VulkanAppSettings createAppSettings() {
 
 int main() {
 #if _DEBUG
-    fmt::print("Mode = Debug");
+    fmt::print("Mode = Debug\n");
 #else
-    fmt::print("Mode = Release");
+    fmt::print("Mode = Release\n");
 #endif
 
     auto appSettings = createAppSettings();

@@ -1,6 +1,6 @@
 // Written by Brendan Galea
 // Refactored by vertoker
-#include "device.h"
+#include "render/device.h"
 
 // std headers
 #include <cstring>
@@ -88,11 +88,11 @@ void VulkanDevice::createInstance() {
     createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
     createInfo.ppEnabledExtensionNames = extensions.data();
 
-    VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
     if (enableValidationLayers) {
         createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
         createInfo.ppEnabledLayerNames = validationLayers.data();
 
+        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
         populateDebugMessengerCreateInfo(debugCreateInfo);
         createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
         std::cout << "Create validation layer" << std::endl;
@@ -133,6 +133,7 @@ void VulkanDevice::pickPhysicalDevice() {
 
     vkGetPhysicalDeviceProperties(physicalDevice, &properties);
     std::cout << "Physical device: " << properties.deviceName << std::endl;
+    std::cout << "Max push constant size: " << properties.limits.maxPushConstantsSize << std::endl;
 }
 
 void VulkanDevice::createDevice() {

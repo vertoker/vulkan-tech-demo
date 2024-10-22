@@ -10,26 +10,35 @@ set(CMAKE_CXX_STANDARD 20)
 # Other features
 set(DISABLE_CONSOLE 0)
 
-#--------
-# Sources
-#--------
+#--------------
+# Src & Include
+#--------------
 
-# Use it if you're normal
-#add_executable(vulkan-tech-demo "src/main.cpp")
+# Set variables for short
+set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
+set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-# Use it if you're crazy
-file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS 
-	"src/*.h" "src/*.c" "src/*.hpp" "src/*.cpp")
-add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
+# Recurse collect every file in include/ and src/ folders
+file(GLOB_RECURSE INCLUDES CONFIGURE_DEPENDS "${INCLUDE_DIR}/*.h" "${INCLUDE_DIR}/*.hpp")
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.c" "${SOURCE_DIR}/*.cpp")
+
+# add include/ folder as root for all header files
+include_directories("${INCLUDE_DIR}")
+
+# finally add all founded include/ and src/ files into compiler as a program
+add_executable("${CMAKE_PROJECT_NAME}" "${INCLUDES}" "${SOURCES}")
+
+#file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS "src/*.h" "src/*.c" "src/*.hpp" "src/*.cpp")
+#add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 #--------------------
 # Resources (feature)
 #--------------------
 
 # Use it in development
-target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
+target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 # Use it in build
-#target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
+#target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 
 #----------
 # Libraries
