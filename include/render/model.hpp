@@ -1,6 +1,7 @@
 #pragma once
 
 #include "device.hpp"
+#include "buffer.hpp"
 
 // GLM
 #define GLM_FORCE_RADIANS
@@ -55,13 +56,11 @@ private:
 	// Link to the device (can be deleted in the future)
 	VulkanDevice& device;
 
-	VkBuffer vertexBuffer; // Buffer on CPU, stored on RAM, edit here
-	VkDeviceMemory vertexBufferMemory; // Buffer on GPU, stored on GPU, copied from RAM on depends
-	uint32_t vertexCount; // Counter for buffer
+	std::unique_ptr<VulkanBuffer> vertexBuffer;
+	uint32_t vertexCount;
 
 	// for index buffer
 	bool hasIndexBuffer = false;
-	VkBuffer indexBuffer;
-	VkDeviceMemory indexBufferMemory;
+	std::unique_ptr<VulkanBuffer> indexBuffer;
 	uint32_t indexCount;
 };
