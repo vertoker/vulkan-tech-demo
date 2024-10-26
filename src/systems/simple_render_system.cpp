@@ -19,12 +19,12 @@ SimpleRenderSystem::~SimpleRenderSystem()
 	vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 }
 
-void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects, const VulkanCamera& camera)
+void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo, std::vector<GameObject>& gameObjects)
 {
-	pipeline->bind(commandBuffer);
+	pipeline->bind(frameInfo.commandBuffer);
 
 	// TODO push camera matrix to the GPU, do not do this in CPU
-	auto projectionView = camera.getProjection() * camera.getView();
+	auto projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
 
 	for (auto& obj : gameObjects) {
 		// Test rotation anim
@@ -37,11 +37,11 @@ void SimpleRenderSystem::renderGameObjects(VkCommandBuffer commandBuffer, std::v
 		push.transform = projectionView * obj.transform.matrix();
 		push.normalMatrix = obj.transform.normalMatrix();
 
-		vkCmdPushConstants(commandBuffer, pipelineLayout,
+		vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
 			0, sizeof(PushConstantData), &push);
-		obj.model->bind(commandBuffer);
-		obj.model->draw(commandBuffer);
+		obj.model->bind(frameInfo.commandBuffer);
+		obj.model->draw(frameInfo.commandBuffer);
 	}
 }
 

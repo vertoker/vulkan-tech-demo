@@ -4,6 +4,7 @@
 #include "render/pipeline.hpp"
 #include "gameobject.hpp"
 #include "render/camera.hpp"
+#include "render/frameInfo.hpp"
 
 // Libs
 #define GLM_FORCE_RADIANS
@@ -26,7 +27,7 @@ public:
 	SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 	SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-	void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<GameObject>& gameObjects, const VulkanCamera& camera);
+	void renderGameObjects(VulkanFrameInfo& frameInfo, std::vector<GameObject>& gameObjects);
 
 private:
 	void createPipelineLayout();

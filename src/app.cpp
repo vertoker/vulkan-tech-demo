@@ -1,6 +1,7 @@
 #include "app.hpp"
 
 #include <tuple>
+#include <numeric>
 
 VulkanApp::VulkanApp(VulkanAppSettings& settings)
 {
@@ -20,13 +21,34 @@ VulkanApp::~VulkanApp()
 
 }
 
+struct UniformBufferObject {
+    glm::mat4 projectionView{1.0f};
+    glm::vec3 lightDirection = glm::normalize(glm::vec3 {1.0f, -3.0f, -1.0f});
+};
+
 const float MAX_FRAME_TIME = 0.25f;
 
 void VulkanApp::run()
 {
-    auto currentTime = std::chrono::high_resolution_clock::now();
+     // for swapchain rendering
+    std::vector<std::unique_ptr<VulkanBuffer>> uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 
-    auto viewer = GameObject::createGameObject();
+    // why not in single buffer? because of NonCoherentAtomSize
+
+    for (size_t i = 0; i < uboBuffers.size(); i++)
+    {
+        uboBuffers[i] = std::make_unique<VulkanBuffer>(
+            *device,
+            sizeof(UniformBufferObject),
+            1, // buffer only for single ubo
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, // this is uniform buffer
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT // host (cpu) can rw data here
+        );
+        uboBuffers[i]->map();
+    }
+    
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    auto cameraObject = GameObject::createGameObject();
 
 	while (!window->shouldClose()) {
 		glfwPollEvents();
@@ -37,14 +59,14 @@ void VulkanApp::run()
 
         deltaTime = glm::min(deltaTime, MAX_FRAME_TIME);
 
-        keyboardInput->move(window->getPtr(), deltaTime, viewer);
+        keyboardInput->move(window->getPtr(), deltaTime, cameraObject);
 
-        //std::cout << "position=" << viewer.transform.position_str() << std::endl;
-        //std::cout << "rotation=" << viewer.transform.rotation_str() << std::endl;
+        //std::cout << "position=" << cameraObject.transform.position_str() << std::endl;
+        //std::cout << "rotation=" << cameraObject.transform.rotation_str() << std::endl;
 
         //camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
-        camera->setViewYXZ(viewer.transform.position, viewer.transform.rotation);
+        camera->setViewYXZ(cameraObject.transform.position, cameraObject.transform.rotation);
 
         float aspect = renderer->getAspectRatio();
         // height is constant, width is flexible
@@ -56,9 +78,21 @@ void VulkanApp::run()
 		// On Linux, resizing can be occurs wrong rendering
 		// On Linux, you need another frame update method
 		if (auto commandBuffer = renderer->beginFrame()) {
+            int frameIndex = renderer->getFrameIndex();
+            VulkanFrameInfo frameInfo {
+                frameIndex, deltaTime, 
+                commandBuffer, *camera
+            };
 
+            // update
+            UniformBufferObject ubo{};
+            ubo.projectionView = camera->getProjection() * camera->getView();
+            uboBuffers[frameIndex]->writeToBuffer(&ubo);
+            uboBuffers[frameIndex]->flush();
+
+            // rendering
 			renderer->beginSwapChainRenderPass(commandBuffer);
-			renderSystem->renderGameObjects(commandBuffer, gameObjects, *camera);
+			renderSystem->renderGameObjects(frameInfo, gameObjects);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}
