@@ -89,6 +89,7 @@
         "numeric": "cpp",
         "queue": "cpp",
         "typeindex": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "text_encoding": "cpp"
     }
 }
