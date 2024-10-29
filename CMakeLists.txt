@@ -1,7 +1,7 @@
 
-#-----
+#--------------------------------------------------------------------------------
 # Init
-#-----
+#--------------------------------------------------------------------------------
 
 cmake_minimum_required(VERSION 3.12)
 project(vulkan-tech-demo VERSION 1.0 LANGUAGES CXX) # Your project name here
@@ -10,9 +10,9 @@ set(CMAKE_CXX_STANDARD 20)
 # Other features
 set(DISABLE_CONSOLE 0)
 
-#--------------
+#--------------------------------------------------------------------------------
 # Src & Include
-#--------------
+#--------------------------------------------------------------------------------
 
 # Set variables for short
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -31,18 +31,18 @@ add_executable("${CMAKE_PROJECT_NAME}" "${INCLUDES}" "${SOURCES}")
 #file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS "src/*.h" "src/*.c" "src/*.hpp" "src/*.cpp")
 #add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
-#--------------------
+#--------------------------------------------------------------------------------
 # Resources (feature)
-#--------------------
+#--------------------------------------------------------------------------------
 
 # Use it in development
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 # Use it in build
 #target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
 
-#----------
+#--------------------------------------------------------------------------------
 # Libraries
-#----------
+#--------------------------------------------------------------------------------
 
 # Include folder in directory (etc. combine folders)
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/") # lib
@@ -69,9 +69,9 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Vulkan::Vulkan)
 
-#--------
+#--------------------------------------------------------------------------------
 # Utility
-#--------
+#--------------------------------------------------------------------------------
 
 # Disable console
 if (DISABLE_CONSOLE)
