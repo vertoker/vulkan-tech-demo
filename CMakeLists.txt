@@ -85,8 +85,8 @@ endif()
 # Scripts execution
 
 if (WIN32)#TODO
-	execute_process(COMMAND "${CMAKE_PROJECT_NAME}/scripts/compile-shaders.bat")
-	execute_process(COMMAND "${CMAKE_PROJECT_NAME}/scripts/copy-resources.bat")
+	execute_process(COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/scripts/compile-shaders.bat")
+	execute_process(COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/scripts/copy-resources.bat")
 endif (WIN32)
 
 if (UNIX)

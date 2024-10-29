@@ -1,12 +1,14 @@
 #pragma once
 
+// app
 #include "gameobject.hpp"
 #include "render/window.hpp"
 #include "render/renderer.hpp"
 #include "input.hpp"
 #include "systems/simple_render_system.hpp"
+#include "render/descriptor.hpp"
 
-// Libs
+// libs
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
@@ -48,12 +50,17 @@ public:
 	void run();
 
 private:
+	void createDescriptors();
 	void loadGameObjects(const std::string& modelPath);
 
 	std::unique_ptr<VulkanWindow> window;
 	std::unique_ptr<VulkanDevice> device;
 	std::unique_ptr<VulkanRenderer> renderer;
 	std::unique_ptr<VulkanCamera> camera;
+
+	std::unique_ptr<VulkanDescriptorPool> globalPool;
+	std::unique_ptr<VulkanDescriptorSetLayout> globalSetLayout;
+
 	std::unique_ptr<SimpleRenderSystem> renderSystem;
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 

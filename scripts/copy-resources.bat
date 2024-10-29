@@ -1,7 +1,7 @@
 @echo off
 rem Compile shaders before start
 
-cd ..
+cd ../..
 
 set PROJECT_PATH=%cd%\
 set RESOURCES=%cd%\resources\

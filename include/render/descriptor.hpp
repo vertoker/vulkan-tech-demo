@@ -7,27 +7,29 @@
 #include <unordered_map>
 #include <vector>
 
+// TODO mess, terrible written, must refactor
+
 class VulkanDescriptorSetLayout {
     private:
     VulkanDevice& device;
-    VkDescriptorSetLayout descriptorSetLayout;
-    std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings{};
+    VkDescriptorSetLayout vkDescriptorSetLayout;
+    std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> vkBindings{};
 
     friend class VulkanDescriptorWriter;
 
     public:
-    VulkanDescriptorSetLayout(VulkanDevice& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+    VulkanDescriptorSetLayout(VulkanDevice& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> vkBindings);
     ~VulkanDescriptorSetLayout();
 
     VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout&) = delete;
     VulkanDescriptorSetLayout &operator=(const VulkanDescriptorSetLayout&) = delete;
 
-    VkDescriptorSetLayout getDescriptorSetLayout() const { return descriptorSetLayout; }
+    VkDescriptorSetLayout getDescriptorSetLayout() const { return vkDescriptorSetLayout; }
     
     class Builder {
         private:
         VulkanDevice& device;
-        std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings{};
+        std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> vkBindings{};
 
         public:
         Builder(VulkanDevice& device) : device{device} {}
@@ -39,31 +41,31 @@ class VulkanDescriptorSetLayout {
 
 class VulkanDescriptorPool {
     private:
-    VulkanDevice& device;
-    VkDescriptorPool descriptorPool;
+    VulkanDevice &device;
+    VkDescriptorPool vkDescriptorPool;
 
     friend class VulkanDescriptorWriter;
 
     public:
-    VulkanDescriptorPool(VulkanDevice& device, uint32_t maxSets, VkDescriptorPoolCreateFlags poolFlags, const std::vector<VkDescriptorPoolSize>& poolSizes);
+    VulkanDescriptorPool(VulkanDevice& device, uint32_t maxSets, VkDescriptorPoolCreateFlags vkPoolFlags, const std::vector<VkDescriptorPoolSize>& vkPoolSizes);
     ~VulkanDescriptorPool();
 
     VulkanDescriptorPool(const VulkanDescriptorPool&) = delete;
     VulkanDescriptorPool &operator=(const VulkanDescriptorPool&) = delete;
 
-    bool allocateDescriptor(const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
-    void freeDescriptor(std::vector<VkDescriptorSet>& descriptors) const;
+    bool tryAllocateDescriptor(const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const;
+    void freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const;
     void resetPool();
 
     class Builder {
         private:
-        VulkanDevice& device;
-        std::vector<VkDescriptorPoolSize> poolSizes{};
+        VulkanDevice &device;
+        std::vector<VkDescriptorPoolSize> vkPoolSizes{};
         uint32_t maxSets = 1000;
-        VkDescriptorPoolCreateFlags poolFlags = 0;
+        VkDescriptorPoolCreateFlags vkPoolFlags = 0;
 
         public:
-        Builder(VulkanDevice& device) : device{device} {}
+        Builder(VulkanDevice &device) : device{device} {}
 
         Builder &addPoolSize(VkDescriptorType descriptorType, uint32_t count);
         Builder &setPoolFlags(VkDescriptorPoolCreateFlags flags);
@@ -76,7 +78,7 @@ class VulkanDescriptorWriter {
     private:
     VulkanDescriptorSetLayout &setLayout;
     VulkanDescriptorPool &pool;
-    std::vector<VkWriteDescriptorSet> writes;
+    std::vector<VkWriteDescriptorSet> vkWrites;
 
     public:
     VulkanDescriptorWriter(VulkanDescriptorSetLayout &setLayout, VulkanDescriptorPool &pool);

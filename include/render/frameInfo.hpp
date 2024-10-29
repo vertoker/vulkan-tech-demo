@@ -9,4 +9,5 @@ struct VulkanFrameInfo {
     float deltaTime;
     VkCommandBuffer commandBuffer;
     VulkanCamera &camera;
+    VkDescriptorSet globalDescriptorSet;
 };

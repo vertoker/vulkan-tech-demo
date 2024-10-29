@@ -5,12 +5,19 @@
 
 VulkanApp::VulkanApp(VulkanAppSettings& settings)
 {
+    // Base, on first creation
 	window = std::make_unique<VulkanWindow>(settings.screenWidth, settings.screenHeight, settings.name);
 	device = std::make_unique<VulkanDevice>(*window);
+
+    // Rendering core
 	renderer = std::make_unique<VulkanRenderer>(*window, *device);
     camera = std::make_unique<VulkanCamera>();
+    createDescriptors();
+
+    // More app-like data
 	renderSystem = std::make_unique<SimpleRenderSystem>(*device, 
-		renderer->getSwapChainRenderPass(), 
+		renderer->getSwapChainRenderPass(),
+        globalSetLayout->getDescriptorSetLayout(),
 		settings.vertShaderPath, settings.fragShaderPath);
     keyboardInput = std::make_unique<InputKeyboardController>();
 
@@ -22,8 +29,9 @@ VulkanApp::~VulkanApp()
 }
 
 struct UniformBufferObject {
-    glm::mat4 projectionView{1.0f};
-    glm::vec3 lightDirection = glm::normalize(glm::vec3 {1.0f, -3.0f, -1.0f});
+	// alignas is same as PushConstants
+    alignas(16) glm::mat4 projectionView{1.0f};
+    alignas(16) glm::vec3 lightDirection = glm::normalize(glm::vec3 {1.0f, -3.0f, -1.0f});
 };
 
 const float MAX_FRAME_TIME = 0.25f;
@@ -45,6 +53,15 @@ void VulkanApp::run()
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT // host (cpu) can rw data here
         );
         uboBuffers[i]->map();
+    }
+
+    std::vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
+    for (size_t i = 0; i < globalDescriptorSets.size(); i++)
+    {
+        auto bufferInfo = uboBuffers[i]->descriptorInfo();
+        VulkanDescriptorWriter(*globalSetLayout, *globalPool)
+            .writeBuffer(0, &bufferInfo)
+            .build(globalDescriptorSets[i]);
     }
     
     auto currentTime = std::chrono::high_resolution_clock::now();
@@ -81,7 +98,9 @@ void VulkanApp::run()
             int frameIndex = renderer->getFrameIndex();
             VulkanFrameInfo frameInfo {
                 frameIndex, deltaTime, 
-                commandBuffer, *camera
+                commandBuffer,
+                *camera,
+                globalDescriptorSets[frameIndex]
             };
 
             // update
@@ -101,7 +120,19 @@ void VulkanApp::run()
 	vkDeviceWaitIdle(device->device());
 }
 
-void VulkanApp::loadGameObjects(const std::string& modelPath)
+void VulkanApp::createDescriptors()
+{
+    globalPool = VulkanDescriptorPool::Builder(*device)
+        .setMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
+        .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
+        //.addPoolSize(VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
+        .build();
+    globalSetLayout = VulkanDescriptorSetLayout::Builder(*device)
+        .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+        .build();
+}
+
+void VulkanApp::loadGameObjects(const std::string &modelPath)
 {
     std::shared_ptr<VulkanModel> testModel = VulkanModel::createModelFromFile(*device, modelPath);
 

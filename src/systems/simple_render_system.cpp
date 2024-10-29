@@ -1,17 +1,17 @@
 #include "systems/simple_render_system.hpp"
 
 struct PushConstantData {
-	glm::mat4 transform{ 1.f }; // projection * view * model
+	glm::mat4 modelMatrix{ 1.f };
 	// alignas is for memory specification for shader declaration
 	glm::mat4 normalMatrix{ 1.f };
 };
 
-SimpleRenderSystem::SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, 
+SimpleRenderSystem::SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
 	const std::string& vertFilePath,
 	const std::string& fragFilePath)
 	: device{device}
 {
-	createPipelineLayout();
+	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass, vertFilePath, fragFilePath);
 }
 SimpleRenderSystem::~SimpleRenderSystem()
@@ -23,8 +23,14 @@ void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo, std::vect
 {
 	pipeline->bind(frameInfo.commandBuffer);
 
-	// TODO push camera matrix to the GPU, do not do this in CPU
-	auto projectionView = frameInfo.camera.getProjection() * frameInfo.camera.getView();
+	vkCmdBindDescriptorSets(
+		frameInfo.commandBuffer,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		pipelineLayout,
+		0, 1,
+		&frameInfo.globalDescriptorSet,
+		0, nullptr
+	);
 
 	for (auto& obj : gameObjects) {
 		// Test rotation anim
@@ -33,8 +39,7 @@ void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo, std::vect
 		//obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.005f, 1.0f);
 
 		PushConstantData push{};
-		// TODO push camera matrix to the GPU, do not do this in CPU
-		push.transform = projectionView * obj.transform.matrix();
+		push.modelMatrix = obj.transform.matrix();
 		push.normalMatrix = obj.transform.normalMatrix();
 
 		vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout,
@@ -45,17 +50,19 @@ void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo, std::vect
 	}
 }
 
-void SimpleRenderSystem::createPipelineLayout()
+void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
 {
 	VkPushConstantRange pushConstantRange{};
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
 	pushConstantRange.offset = 0;
 	pushConstantRange.size = sizeof(PushConstantData);
 
+	std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
+
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
 	pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-	pipelineLayoutInfo.setLayoutCount = 0;
-	pipelineLayoutInfo.pSetLayouts = nullptr;
+	pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
+	pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
 	pipelineLayoutInfo.pushConstantRangeCount = 1;
 	pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 

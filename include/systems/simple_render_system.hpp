@@ -19,7 +19,7 @@
 
 class SimpleRenderSystem {
 public:
-	SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, 
+	SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
 		const std::string& vertFilePath,
 		const std::string& fragFilePath);
 	~SimpleRenderSystem();
@@ -30,7 +30,7 @@ public:
 	void renderGameObjects(VulkanFrameInfo& frameInfo, std::vector<GameObject>& gameObjects);
 
 private:
-	void createPipelineLayout();
+	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 	void createPipeline(VkRenderPass renderPass, 
 		const std::string& vertFilePath,
 		const std::string& fragFilePath);
