@@ -50,12 +50,15 @@ void main() {
 	//fragColor = lightIntensity * color;
 
 	// point light realization
-	vec3 directionToLight = ubo.lightPosition - positionWorld.xyz;
-
+	vec3 distanceToLight = ubo.lightPosition - positionWorld.xyz;
+	vec3 directionToLight = normalize(distanceToLight);
+	
 	vec3 ambientLightColor = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
-	vec3 lightColor = ubo.lightColor.xyz * ubo.lightColor.w;
 
-	vec3 diffuseLight = lightColor * max(dot(normalWorld, normalize(directionToLight)), 0);
+	// dot product of vec3 itself is easy squared distance
+	float attenuation = 1.0 / dot(distanceToLight, distanceToLight);
+	vec3 lightColor = ubo.lightColor.xyz * ubo.lightColor.w * attenuation;
+	vec3 diffuseLight = lightColor * max(dot(normalWorld, directionToLight), 0);
 
 	fragColor = (diffuseLight + ambientLightColor) * color;
 }

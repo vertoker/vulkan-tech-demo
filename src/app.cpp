@@ -36,7 +36,7 @@ struct UniformBufferObject {
 
     glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.02f}; // w is intensity
     glm::vec3 lightPosition{-1.0f}; alignas(16)
-    glm::vec4 lightColor{1.0f}; // w is lightIntensity
+    glm::vec4 lightColor{0.0f, 1.0f, 0.0f, 1.0f}; // w is lightIntensity
 };
 
 const float MAX_FRAME_TIME = 0.25f;
