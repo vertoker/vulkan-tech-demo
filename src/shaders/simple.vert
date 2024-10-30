@@ -14,7 +14,11 @@ layout(location = 0) out vec3 fragColor;
 
 layout(set = 0, binding = 0) uniform UniformBufferObject {
 	mat4 projectionViewMatrix;
-	vec3 lightDirection;
+	//vec3 lightDirection;
+
+	vec4 ambientLightColor; // w is for intensity
+	vec3 lightPosition;
+	vec4 lightColor; // w is for intensity
 } ubo;
 
 // Input constants (individual data per drawing)
@@ -24,29 +28,34 @@ layout(push_constant) uniform Push {
 	mat4 normalMatrix;
 } push;
 
-const float AMBIENT = 0.02;
-
-// Output
-// layout(location = 0) out vec3 fragColor; // use it if you need to test color blending
-
 void main() {
 	// Not B*A, use A*B for matrix multiplication
 	//gl_Position = vec4(push.modelMatrix * position + push.offset, 1.0);
 	//fragColor = color; // color is a special field for baricentric color blending
 
-	gl_Position = ubo.projectionViewMatrix * push.modelMatrix * vec4(position, 1.0);
+	vec4 positionWorld = push.modelMatrix * vec4(position, 1.0);
+	vec3 normalWorld = normalize(mat3(push.normalMatrix) * normal);
+	gl_Position = ubo.projectionViewMatrix * positionWorld;
 
 	// convert mat4 to mat3 remove translation, stayed only direction, which needed for
 	// calculating object space normal to world space normal
 	// works only if sx == sy == sz
-	//vec3 normalWorldSpace = normalize(mat3(push.modelMatrix) * normal);
+	//vec3 normalWorld = normalize(mat3(push.modelMatrix) * normal);
 
 	//mat3 normalMatrix = transpose(inverse(mat3(push.modelMatrix)));
-	//vec3 normalWorldSpace = normalize(normalMatrix * normal);
+	//vec3 normalWorld = normalize(normalMatrix * normal);
 
-	vec3 normalWorldSpace = normalize(mat3(push.normalMatrix) * normal);
+	// directional light realization
+	//float lightIntensity = AMBIENT + max(dot(normalWorld, ubo.lightDirection), 0);
+	//fragColor = lightIntensity * color;
 
-	float lightIntensity = AMBIENT + max(dot(normalWorldSpace, ubo.lightDirection), 0);
+	// point light realization
+	vec3 directionToLight = ubo.lightPosition - positionWorld.xyz;
 
-	fragColor = lightIntensity * color;
+	vec3 ambientLightColor = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
+	vec3 lightColor = ubo.lightColor.xyz * ubo.lightColor.w;
+
+	vec3 diffuseLight = lightColor * max(dot(normalWorld, normalize(directionToLight)), 0);
+
+	fragColor = (diffuseLight + ambientLightColor) * color;
 }
