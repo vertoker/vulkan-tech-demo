@@ -2,21 +2,39 @@
 #version 450
 
 // Input
-// use it if you need to test color blending
 layout(location = 0) in vec3 fragColor;
+layout(location = 1) in vec3 fragPosWorld;
+layout(location = 2) in vec3 fragNormalWorld;
 
-// Input constants (individual data per drawing)
-// You must use only ONE constant per shader entry point
+// Output
+layout(location = 0) out vec4 outColor;
+
+layout(set = 0, binding = 0) uniform UniformBufferObject {
+	mat4 projectionViewMatrix;
+	//vec3 lightDirection;
+
+	vec4 ambientLightColor; // w is for intensity
+	vec3 lightPosition;
+	vec4 lightColor; // w is for intensity
+} ubo;
+
 layout(push_constant) uniform Push {
 	mat4 modelMatrix;
 	mat4 normalMatrix;
 } push;
 
-// Output
-layout(location = 0) out vec4 outColor;
-
 // Input location and Output location is different buffers
 
 void main() {
-	outColor = vec4(fragColor, 1.0);
+	vec3 distanceToLight = ubo.lightPosition - fragPosWorld;
+	vec3 directionToLight = normalize(distanceToLight);
+	
+	vec3 ambientLightColor = ubo.ambientLightColor.xyz * ubo.ambientLightColor.w;
+
+	// dot product of vec3 itself is easy squared distance
+	float attenuation = 1.0 / dot(distanceToLight, distanceToLight);
+	vec3 lightColor = ubo.lightColor.xyz * ubo.lightColor.w * attenuation;
+	vec3 diffuseLight = lightColor * max(dot(normalize(fragNormalWorld), directionToLight), 0);
+
+	outColor = vec4((diffuseLight + ambientLightColor) * fragColor, 1.0);
 }
