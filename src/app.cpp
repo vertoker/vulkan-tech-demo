@@ -105,7 +105,8 @@ void VulkanApp::run()
                 frameIndex, deltaTime, 
                 commandBuffer,
                 *camera,
-                globalDescriptorSets[frameIndex]
+                globalDescriptorSets[frameIndex],
+                gameObjects
             };
 
             // update
@@ -116,7 +117,7 @@ void VulkanApp::run()
 
             // rendering
 			renderer->beginSwapChainRenderPass(commandBuffer);
-			renderSystem->renderGameObjects(frameInfo, gameObjects);
+			renderSystem->renderGameObjects(frameInfo);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}
@@ -152,5 +153,5 @@ void VulkanApp::loadGameObjects(const std::string &modelPath)
     //gameObj.transform.scale = { 1.5f, 1.5f, 1.5f };
     gameObj.transform.scale = { 0.5f, 0.5f, 0.5f };
 
-    gameObjects.push_back(std::move(gameObj));
+    gameObjects.emplace(gameObj.getId(), std::move(gameObj));
 }

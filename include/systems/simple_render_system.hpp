@@ -27,7 +27,7 @@ public:
 	SimpleRenderSystem(const SimpleRenderSystem&) = delete;
 	SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-	void renderGameObjects(VulkanFrameInfo& frameInfo, std::vector<GameObject>& gameObjects);
+	void renderGameObjects(VulkanFrameInfo& frameInfo);
 
 private:
 	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

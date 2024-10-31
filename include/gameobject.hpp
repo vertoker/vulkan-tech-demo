@@ -6,6 +6,7 @@
 // std
 #include <memory>
 #include <format>
+#include <unordered_map>
 
 struct Transform {
 	glm::vec3 position{ 0.0f, 0.0f, 0.0f };
@@ -28,6 +29,7 @@ struct Transform {
 class GameObject {
 public:
 	using id_t = unsigned int;
+	using Map = std::unordered_map<id_t, GameObject>;
 
 	static GameObject createGameObject() {
 		static id_t currentId = 0;

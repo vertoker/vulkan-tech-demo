@@ -19,7 +19,7 @@ SimpleRenderSystem::~SimpleRenderSystem()
 	vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 }
 
-void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo, std::vector<GameObject>& gameObjects)
+void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo)
 {
 	pipeline->bind(frameInfo.commandBuffer);
 
@@ -32,12 +32,13 @@ void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo, std::vect
 		0, nullptr
 	);
 
-	for (auto& obj : gameObjects) {
+	for (auto& pair : frameInfo.gameObjects) {
 		// Test rotation anim
 		//obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
 		//obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());
 		//obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.005f, 1.0f);
 
+		auto obj = pair.second;
 		PushConstantData push{};
 		push.modelMatrix = obj.transform.matrix();
 		push.normalMatrix = obj.transform.normalMatrix();

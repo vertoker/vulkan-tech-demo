@@ -31,13 +31,6 @@ public:
 	std::string modelPath;
 };
 
-struct PushConstantData {
-	glm::mat2 transform{ 1.f }; // Identity matrix
-	glm::vec2 offset;
-	// alignas is for memory specification for shader declaration
-	alignas(16) glm::vec3 color;
-};
-
 class VulkanApp {
 public:
 	VulkanApp(VulkanAppSettings& settings);
@@ -64,5 +57,5 @@ private:
 	std::unique_ptr<SimpleRenderSystem> renderSystem;
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 
-	std::vector<GameObject> gameObjects;
+	GameObject::Map gameObjects;
 };

@@ -8,6 +8,7 @@ struct VulkanFrameInfo {
     int frameIndex;
     float deltaTime;
     VkCommandBuffer commandBuffer;
-    VulkanCamera &camera;
+    VulkanCamera& camera;
     VkDescriptorSet globalDescriptorSet;
+    GameObject::Map& gameObjects;
 };
