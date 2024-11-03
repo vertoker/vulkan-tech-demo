@@ -10,8 +10,8 @@ layout(location = 2) in vec3 fragNormalWorld;
 layout(location = 0) out vec4 outColor;
 
 layout(set = 0, binding = 0) uniform UniformBufferObject {
-	mat4 projectionViewMatrix;
-	//vec3 lightDirection;
+	mat4 projectionMatrix;
+	mat4 viewMatrix;
 
 	vec4 ambientLightColor; // w is for intensity
 	vec3 lightPosition;

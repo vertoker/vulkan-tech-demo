@@ -17,8 +17,8 @@ VulkanAppSettings createAppSettings() {
     auto path = boost::dll::program_location().parent_path().generic_path().string();
     auto shaders = path + "/resources/ShaderCache/";
     auto models = path + "/resources/models/";
-    appSettings.vertShaderPath = shaders + std::string("simple.vert.spv");
-    appSettings.fragShaderPath = shaders + std::string("simple.frag.spv");
+    appSettings.vertShaderPath = shaders + std::string("world.vert.spv");
+    appSettings.fragShaderPath = shaders + std::string("world.frag.spv");
     appSettings.modelPath = models + std::string("keyboard.obj");
     //keyboard smooth-vase flat-vase
 

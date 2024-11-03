@@ -17,24 +17,22 @@
 #include <memory>
 #include <vector>
 
-class SimpleRenderSystem {
+class WorldRenderSystem {
 public:
-	SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
-		const std::string& vertFilePath,
-		const std::string& fragFilePath);
-	~SimpleRenderSystem();
+	WorldRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
+		const std::string& vertFilePath, const std::string& fragFilePath);
+	~WorldRenderSystem();
 
-	SimpleRenderSystem(const SimpleRenderSystem&) = delete;
-	SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
+	WorldRenderSystem(const WorldRenderSystem&) = delete;
+	WorldRenderSystem& operator=(const WorldRenderSystem&) = delete;
 
-	void renderGameObjects(VulkanFrameInfo& frameInfo);
+	void render(VulkanFrameInfo& frameInfo);
 
 private:
 	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 	void createPipeline(VkRenderPass renderPass, 
-		const std::string& vertFilePath,
-		const std::string& fragFilePath);
-
+		const std::string& vertFilePath, const std::string& fragFilePath);
+	
 	VulkanDevice& device;
 
 	std::unique_ptr<VulkanPipeline> pipeline;

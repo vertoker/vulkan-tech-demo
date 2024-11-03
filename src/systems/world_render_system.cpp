@@ -1,25 +1,22 @@
-#include "systems/simple_render_system.hpp"
+#include "systems/world_render_system.hpp"
 
 struct PushConstantData {
 	glm::mat4 modelMatrix{ 1.f };
-	// alignas is for memory specification for shader declaration
 	glm::mat4 normalMatrix{ 1.f };
 };
 
-SimpleRenderSystem::SimpleRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
-	const std::string& vertFilePath,
-	const std::string& fragFilePath)
-	: device{device}
+WorldRenderSystem::WorldRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
+	const std::string& vertFilePath, const std::string& fragFilePath) : device{device}
 {
 	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass, vertFilePath, fragFilePath);
 }
-SimpleRenderSystem::~SimpleRenderSystem()
+WorldRenderSystem::~WorldRenderSystem()
 {
 	vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 }
 
-void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo)
+void WorldRenderSystem::render(VulkanFrameInfo& frameInfo)
 {
 	pipeline->bind(frameInfo.commandBuffer);
 
@@ -51,7 +48,7 @@ void SimpleRenderSystem::renderGameObjects(VulkanFrameInfo& frameInfo)
 	}
 }
 
-void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
+void WorldRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
 {
 	VkPushConstantRange pushConstantRange{};
 	pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
@@ -70,9 +67,8 @@ void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLay
 	if (vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
 		throw std::runtime_error("failed to create pipeline layout");
 }
-void SimpleRenderSystem::createPipeline(VkRenderPass renderPass, 
-	const std::string& vertFilePath,
-	const std::string& fragFilePath)
+void WorldRenderSystem::createPipeline(VkRenderPass renderPass, 
+	const std::string& vertFilePath, const std::string& fragFilePath)
 {
 	assert(pipelineLayout != nullptr && "Can't create pipeline before pipeline layout");
 

@@ -11,7 +11,7 @@ set RESOURCES_OUTPUT=%cd%\resources\ShaderCache\
 
 md %RESOURCES_OUTPUT%
 
-glslc %RESOURCES_INPUT%simple.vert -o %RESOURCES_OUTPUT%simple.vert.spv
-glslc %RESOURCES_INPUT%simple.frag -o %RESOURCES_OUTPUT%simple.frag.spv
+glslc %RESOURCES_INPUT%world.vert -o %RESOURCES_OUTPUT%world.vert.spv
+glslc %RESOURCES_INPUT%world.frag -o %RESOURCES_OUTPUT%world.frag.spv
 
 pause

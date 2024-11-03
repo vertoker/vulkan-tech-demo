@@ -15,7 +15,7 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
     createDescriptors();
 
     // More app-like data
-	renderSystem = std::make_unique<SimpleRenderSystem>(*device, 
+	renderSystem = std::make_unique<WorldRenderSystem>(*device, 
 		renderer->getSwapChainRenderPass(),
         globalSetLayout->getDescriptorSetLayout(),
 		settings.vertShaderPath, settings.fragShaderPath);
@@ -30,7 +30,8 @@ VulkanApp::~VulkanApp()
 
 struct UniformBufferObject {
 	// alignas is same as PushConstants
-    glm::mat4 projectionView{1.0f};
+    glm::mat4 projection{1.0f};
+    glm::mat4 view{1.0f};
 
     //glm::vec3 lightDirection = glm::normalize(glm::vec3 {1.0f, -3.0f, -1.0f});
 
@@ -111,13 +112,14 @@ void VulkanApp::run()
 
             // update
             UniformBufferObject ubo{};
-            ubo.projectionView = camera->getProjection() * camera->getView();
+            ubo.projection = camera->getProjection();
+            ubo.view = camera->getView();
             uboBuffers[frameIndex]->writeToBuffer(&ubo);
             uboBuffers[frameIndex]->flush();
 
             // rendering
 			renderer->beginSwapChainRenderPass(commandBuffer);
-			renderSystem->renderGameObjects(frameInfo);
+			renderSystem->render(frameInfo);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}

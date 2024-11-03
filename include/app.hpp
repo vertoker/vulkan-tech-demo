@@ -5,7 +5,7 @@
 #include "render/window.hpp"
 #include "render/renderer.hpp"
 #include "input.hpp"
-#include "systems/simple_render_system.hpp"
+#include "systems/world_render_system.hpp"
 #include "render/descriptor.hpp"
 
 // libs
@@ -54,7 +54,7 @@ private:
 	std::unique_ptr<VulkanDescriptorPool> globalPool;
 	std::unique_ptr<VulkanDescriptorSetLayout> globalSetLayout;
 
-	std::unique_ptr<SimpleRenderSystem> renderSystem;
+	std::unique_ptr<WorldRenderSystem> renderSystem;
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 
 	GameObject::Map gameObjects;
