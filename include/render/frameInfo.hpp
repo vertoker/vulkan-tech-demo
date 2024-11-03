@@ -10,5 +10,5 @@ struct VulkanFrameInfo {
     VkCommandBuffer commandBuffer;
     VulkanCamera& camera;
     VkDescriptorSet globalDescriptorSet;
-    GameObject::Map& gameObjects;
+    GameObject::map& gameObjects;
 };

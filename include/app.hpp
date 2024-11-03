@@ -5,8 +5,10 @@
 #include "render/window.hpp"
 #include "render/renderer.hpp"
 #include "input.hpp"
-#include "systems/world_render_system.hpp"
 #include "render/descriptor.hpp"
+
+#include "systems/world_render_system.hpp"
+#include "systems/point_light_system.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -26,8 +28,10 @@ public:
 	int screenHeight = 600;
 	std::string name = "vulkan tech demo";
 
-	std::string vertShaderPath;
-	std::string fragShaderPath;
+	std::string world_vertShaderPath;
+	std::string world_fragShaderPath;
+	std::string pointLight_vertShaderPath;
+	std::string pointLight_fragShaderPath;
 	std::string modelPath;
 };
 
@@ -42,8 +46,13 @@ public:
 
 	void run();
 
+	using render_system = std::shared_ptr<VulkanRenderSystem>;
+	using render_systems = std::vector<render_system>;
+
 private:
+
 	void createDescriptors();
+	void createRenderSystems(VulkanAppSettings& settings);
 	void loadGameObjects(const std::string& modelPath);
 
 	std::unique_ptr<VulkanWindow> window;
@@ -54,8 +63,8 @@ private:
 	std::unique_ptr<VulkanDescriptorPool> globalPool;
 	std::unique_ptr<VulkanDescriptorSetLayout> globalSetLayout;
 
-	std::unique_ptr<WorldRenderSystem> renderSystem;
+	std::unique_ptr<render_systems> renderSystems;
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 
-	GameObject::Map gameObjects;
+	GameObject::map gameObjects;
 };

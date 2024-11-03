@@ -13,12 +13,9 @@ VulkanApp::VulkanApp(VulkanAppSettings& settings)
 	renderer = std::make_unique<VulkanRenderer>(*window, *device);
     camera = std::make_unique<VulkanCamera>();
     createDescriptors();
+    createRenderSystems(settings);
 
     // More app-like data
-	renderSystem = std::make_unique<WorldRenderSystem>(*device, 
-		renderer->getSwapChainRenderPass(),
-        globalSetLayout->getDescriptorSetLayout(),
-		settings.vertShaderPath, settings.fragShaderPath);
     keyboardInput = std::make_unique<InputKeyboardController>();
 
 	loadGameObjects(settings.modelPath);
@@ -119,7 +116,9 @@ void VulkanApp::run()
 
             // rendering
 			renderer->beginSwapChainRenderPass(commandBuffer);
-			renderSystem->render(frameInfo);
+            for (size_t i = 0; i < renderSystems->size(); i++) {
+                renderSystems->at(i)->render(frameInfo);
+            }
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}
@@ -140,6 +139,25 @@ void VulkanApp::createDescriptors()
             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 
             VK_SHADER_STAGE_ALL_GRAPHICS) // allow vertex/fragment lighting
         .build();
+}
+
+void VulkanApp::createRenderSystems(VulkanAppSettings& settings)
+{
+    auto worldRenderSystem = std::make_shared<WorldRenderSystem>(*device, 
+		renderer->getSwapChainRenderPass(),
+        globalSetLayout->getDescriptorSetLayout(),
+		settings.world_vertShaderPath, 
+        settings.world_fragShaderPath);
+    auto pointLightSystem = std::make_shared<PointLightSystem>(*device, 
+		renderer->getSwapChainRenderPass(),
+        globalSetLayout->getDescriptorSetLayout(),
+		settings.pointLight_vertShaderPath, 
+        settings.pointLight_fragShaderPath);
+    
+	renderSystems = std::make_unique<render_systems>();
+    renderSystems->reserve(2);
+    renderSystems->emplace_back(std::static_pointer_cast<VulkanRenderSystem>(worldRenderSystem));
+    renderSystems->emplace_back(std::static_pointer_cast<VulkanRenderSystem>(pointLightSystem));
 }
 
 void VulkanApp::loadGameObjects(const std::string &modelPath)

@@ -14,13 +14,15 @@
 VulkanAppSettings createAppSettings() {
     VulkanAppSettings appSettings{};
 
-    auto path = boost::dll::program_location().parent_path().generic_path().string();
-    auto shaders = path + "/resources/ShaderCache/";
-    auto models = path + "/resources/models/";
-    appSettings.vertShaderPath = shaders + std::string("world.vert.spv");
-    appSettings.fragShaderPath = shaders + std::string("world.frag.spv");
-    appSettings.modelPath = models + std::string("keyboard.obj");
-    //keyboard smooth-vase flat-vase
+    std::string path = boost::dll::program_location().parent_path().generic_path().string(); // wtf
+    std::string shaders = path + "/resources/ShaderCache/";
+    std::string models = path + "/resources/models/";
+
+    appSettings.world_vertShaderPath = shaders + std::string("world.vert.spv");
+    appSettings.world_fragShaderPath = shaders + std::string("world.frag.spv");
+    appSettings.pointLight_vertShaderPath = shaders + std::string("point_light.vert.spv");
+    appSettings.pointLight_fragShaderPath = shaders + std::string("point_light.frag.spv");
+    appSettings.modelPath = models + std::string("keyboard.obj"); // keyboard smooth-vase flat-vase
 
     return appSettings;
 }
@@ -33,9 +35,6 @@ int main() {
 #endif
 
     auto appSettings = createAppSettings();
-
-    std::cout << appSettings.vertShaderPath << std::endl;
-    std::cout << appSettings.fragShaderPath << std::endl;
 
     VulkanApp app{ appSettings };
 

@@ -93,6 +93,12 @@
         "text_encoding": "cpp",
         "expected": "cpp",
         "bitset": "cpp",
-        "semaphore": "cpp"
+        "semaphore": "cpp",
+        "codecvt": "cpp",
+        "cstdarg": "cpp",
+        "execution": "cpp",
+        "filesystem": "cpp",
+        "stack": "cpp",
+        "valarray": "cpp"
     }
 }

@@ -2,11 +2,11 @@
 
 #include "render_system.hpp"
 
-class WorldRenderSystem : public VulkanRenderSystem {
+class PointLightSystem : public VulkanRenderSystem {
 public:
-	WorldRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
+	PointLightSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
 		const std::string& vertFilePath, const std::string& fragFilePath);
-	~WorldRenderSystem() override;
+	~PointLightSystem() override;
 	
 	void render(VulkanFrameInfo& frameInfo) override;
 

@@ -6,7 +6,7 @@ struct PushConstantData {
 };
 
 WorldRenderSystem::WorldRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
-	const std::string& vertFilePath, const std::string& fragFilePath) : device{device}
+	const std::string& vertFilePath, const std::string& fragFilePath) : VulkanRenderSystem(device)
 {
 	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass, vertFilePath, fragFilePath);
