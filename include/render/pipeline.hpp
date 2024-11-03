@@ -8,6 +8,9 @@
 
 // Config for all configurable parts of GPU pipeline
 struct PipelineConfigInfo {
+	std::vector<VkVertexInputBindingDescription> bindingDescription{};
+	std::vector<VkVertexInputAttributeDescription> attributeDescription{};
+
 	// Input pipeline stage config
 	VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
 	// Viewport for rendering

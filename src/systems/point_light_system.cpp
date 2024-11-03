@@ -55,6 +55,8 @@ void PointLightSystem::createPipeline(VkRenderPass renderPass,
 	VulkanPipeline::defaultConfigInfo(pipelineInfo);
 	pipelineInfo.renderPass = renderPass;
 	pipelineInfo.pipelineLayout = pipelineLayout;
+	pipelineInfo.attributeDescription.clear();
+	pipelineInfo.bindingDescription.clear();
 
 	pipeline = std::make_unique<VulkanPipeline>(device, pipelineInfo, vertFilePath, fragFilePath);
 }

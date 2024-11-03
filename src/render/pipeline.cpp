@@ -58,8 +58,8 @@ void VulkanPipeline::createGraphicsPipeline(
 	shaderStages[1].flags = 0;
 	shaderStages[1].pSpecializationInfo = nullptr;
 
-	auto attributeDescriptions = VulkanModel::Vertex::getAttributeDescriptions();
-	auto bindingDescriptions = VulkanModel::Vertex::getBindingDescriptions();
+	auto& bindingDescriptions = configInfo.bindingDescription;
+	auto& attributeDescriptions = configInfo.attributeDescription;
 
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -189,6 +189,9 @@ void VulkanPipeline::defaultConfigInfo(PipelineConfigInfo& configInfo)
 	configInfo.dynamicStateInfo.dynamicStateCount = static_cast<uint32_t>(configInfo.dynamicStateEnables.size());
 	configInfo.dynamicStateInfo.pDynamicStates = configInfo.dynamicStateEnables.data();
 	configInfo.dynamicStateInfo.flags = 0;
+
+	configInfo.bindingDescription = VulkanModel::Vertex::getBindingDescriptions();
+	configInfo.attributeDescription = VulkanModel::Vertex::getAttributeDescriptions();
 }
 
 std::vector<char> VulkanPipeline::readShader(const std::string& filePath)
