@@ -29,13 +29,15 @@ void WorldRenderSystem::render(VulkanFrameInfo& frameInfo)
 		0, nullptr
 	);
 
-	for (auto& pair : frameInfo.gameObjects) {
+	for (auto& kv : frameInfo.gameObjects) {
 		// Test rotation anim
 		//obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
 		//obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());
 		//obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.005f, 1.0f);
 
-		auto obj = pair.second;
+		auto& obj = kv.second;
+		if (obj.model == nullptr) continue;
+
 		PushConstantData push{};
 		push.modelMatrix = obj.transform.matrix();
 		push.normalMatrix = obj.transform.normalMatrix();

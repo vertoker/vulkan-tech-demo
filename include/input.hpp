@@ -26,6 +26,6 @@ public:
 	void move(GLFWwindow* window, float dt, GameObject& controller);
 
 	KeyMappings keys{};
-	float moveSpeed{ 0.3f };
-	float lookSpeed{ 0.8f };
+	float moveSpeed{ 0.8f };
+	float lookSpeed{ 1.3f };
 };

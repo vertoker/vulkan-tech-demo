@@ -8,6 +8,7 @@ public:
 		const std::string& vertFilePath, const std::string& fragFilePath);
 	~PointLightSystem() override;
 	
+	void updateLights(VulkanFrameInfo& frameInfo, UniformBufferObject& ubo);
 	void render(VulkanFrameInfo& frameInfo) override;
 
 private:

@@ -1,7 +1,7 @@
 #include "gameobject.hpp"
 #include <glm/gtc/quaternion.hpp>
 
-/*glm::mat4 Transform::rotation_matrix() const
+/*glm::mat4 TransformComponent::rotation_matrix() const
 {
     float x = rotation.x * 2.0f;
     float y = rotation.y * 2.0f;
@@ -49,7 +49,7 @@
     return matrix;
 }*/
 
-/*glm::mat4 Transform::matrix2()
+/*glm::mat4 TransformComponent::matrix2()
 {
     auto matrix = glm::translate(glm::mat4{ 1.0f }, position);
     matrix = matrix * rotation_matrix();
@@ -58,7 +58,7 @@
 }*/
 
 // position * rotation.y * rotation.x * rotation.z * scale
-glm::mat4 Transform::matrix()
+glm::mat4 TransformComponent::matrix()
 {
 	const float s1 = glm::sin(rotation.y);
 	const float c1 = glm::cos(rotation.y);
@@ -98,7 +98,7 @@ glm::mat4 Transform::matrix()
     };
 }
 
-glm::mat3 Transform::normalMatrix()
+glm::mat3 TransformComponent::normalMatrix()
 {
     const float s1 = glm::sin(rotation.y);
     const float c1 = glm::cos(rotation.y);
@@ -126,4 +126,14 @@ glm::mat3 Transform::normalMatrix()
             invScale.z * (c1 * c2),
         },
     };
+}
+
+GameObject GameObject::createPointLight(float intensity, float radius, glm::vec3 color)
+{
+    GameObject obj = GameObject::createGameObject();
+    obj.color = color;
+    obj.transform.scale = glm::vec3{radius};
+    obj.pointLight = std::make_unique<PointLightComponent>();
+    obj.pointLight->lightIntensity = intensity;
+    return obj;
 }

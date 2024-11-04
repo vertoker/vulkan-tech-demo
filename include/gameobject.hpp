@@ -8,7 +8,7 @@
 #include <format>
 #include <unordered_map>
 
-struct Transform {
+struct TransformComponent {
 	glm::vec3 position{ 0.0f, 0.0f, 0.0f };
 	glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
 	//glm::quat rotation{ 1.0f, 0.0f, 0.0f, 0.0f };
@@ -25,6 +25,10 @@ struct Transform {
 	glm::mat3 normalMatrix();
 };
 
+struct PointLightComponent {
+	float lightIntensity = 1.0f;
+};
+
 // Unity like
 class GameObject {
 public:
@@ -35,12 +39,18 @@ public:
 		static id_t currentId = 0;
 		return GameObject{ currentId++ };
 	}
+	static GameObject createPointLight(float intensity, float radius, glm::vec3 color);
 
 	const id_t getId() { return id; }
 
-	std::shared_ptr<VulkanModel> model{};
+	// TODO convert all of this into ECS
+
 	glm::vec3 color{};
-	Transform transform{};
+	TransformComponent transform{};
+
+	// Optional
+	std::shared_ptr<VulkanModel> model{};
+	std::unique_ptr<PointLightComponent> pointLight = nullptr;
 
 private:
 	GameObject(id_t objId) : id{ objId } {}

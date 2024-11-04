@@ -46,9 +46,6 @@ public:
 
 	void run();
 
-	using render_system = std::shared_ptr<VulkanRenderSystem>;
-	using render_systems = std::vector<render_system>;
-
 private:
 
 	void createDescriptors();
@@ -63,7 +60,8 @@ private:
 	std::unique_ptr<VulkanDescriptorPool> globalPool;
 	std::unique_ptr<VulkanDescriptorSetLayout> globalSetLayout;
 
-	std::unique_ptr<render_systems> renderSystems;
+	std::unique_ptr<WorldRenderSystem> worldRenderSystem;
+	std::unique_ptr<PointLightSystem> pointLightSystem;
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 
 	GameObject::map gameObjects;

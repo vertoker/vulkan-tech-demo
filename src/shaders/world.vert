@@ -14,13 +14,16 @@ layout(location = 0) out vec3 fragColor;
 layout(location = 1) out vec3 fragPosWorld;
 layout(location = 2) out vec3 fragNormalWorld;
 
+struct PointLight {
+	vec4 position; // ignore w
+	vec4 color; // w is intensity
+};
 layout(set = 0, binding = 0) uniform UniformBufferObject {
 	mat4 projectionMatrix;
 	mat4 viewMatrix;
-
 	vec4 ambientLightColor; // w is for intensity
-	vec3 lightPosition;
-	vec4 lightColor; // w is for intensity
+	PointLight pointLights[10];
+	int numLights;
 } ubo;
 
 // Input constants (individual data per drawing)

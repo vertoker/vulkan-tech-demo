@@ -25,18 +25,6 @@ VulkanApp::~VulkanApp()
 
 }
 
-struct UniformBufferObject {
-	// alignas is same as PushConstants
-    glm::mat4 projection{1.0f};
-    glm::mat4 view{1.0f};
-
-    //glm::vec3 lightDirection = glm::normalize(glm::vec3 {1.0f, -3.0f, -1.0f});
-
-    glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.02f}; // w is intensity
-    glm::vec3 lightPosition{-1.0f}; alignas(16)
-    glm::vec4 lightColor{0.0f, 1.0f, 0.0f, 1.0f}; // w is lightIntensity
-};
-
 const float MAX_FRAME_TIME = 0.25f;
 
 void VulkanApp::run()
@@ -69,6 +57,8 @@ void VulkanApp::run()
     
     auto currentTime = std::chrono::high_resolution_clock::now();
     auto cameraObject = GameObject::createGameObject();
+    
+    cameraObject.transform.position = glm::vec3{0.0f, -1.5f, 0.0f};
 
 	while (!window->shouldClose()) {
 		glfwPollEvents();
@@ -111,14 +101,14 @@ void VulkanApp::run()
             UniformBufferObject ubo{};
             ubo.projection = camera->getProjection();
             ubo.view = camera->getView();
+            pointLightSystem->updateLights(frameInfo, ubo);
             uboBuffers[frameIndex]->writeToBuffer(&ubo);
             uboBuffers[frameIndex]->flush();
 
             // rendering
 			renderer->beginSwapChainRenderPass(commandBuffer);
-            for (size_t i = 0; i < renderSystems->size(); i++) {
-                renderSystems->at(i)->render(frameInfo);
-            }
+            worldRenderSystem->render(frameInfo);
+            pointLightSystem->render(frameInfo);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}
@@ -143,21 +133,16 @@ void VulkanApp::createDescriptors()
 
 void VulkanApp::createRenderSystems(VulkanAppSettings& settings)
 {
-    auto worldRenderSystem = std::make_shared<WorldRenderSystem>(*device, 
+    worldRenderSystem = std::make_unique<WorldRenderSystem>(*device, 
 		renderer->getSwapChainRenderPass(),
         globalSetLayout->getDescriptorSetLayout(),
 		settings.world_vertShaderPath, 
         settings.world_fragShaderPath);
-    auto pointLightSystem = std::make_shared<PointLightSystem>(*device, 
+    pointLightSystem = std::make_unique<PointLightSystem>(*device, 
 		renderer->getSwapChainRenderPass(),
         globalSetLayout->getDescriptorSetLayout(),
 		settings.pointLight_vertShaderPath, 
         settings.pointLight_fragShaderPath);
-    
-	renderSystems = std::make_unique<render_systems>();
-    renderSystems->reserve(2);
-    renderSystems->emplace_back(std::static_pointer_cast<VulkanRenderSystem>(worldRenderSystem));
-    renderSystems->emplace_back(std::static_pointer_cast<VulkanRenderSystem>(pointLightSystem));
 }
 
 void VulkanApp::loadGameObjects(const std::string &modelPath)
@@ -166,12 +151,30 @@ void VulkanApp::loadGameObjects(const std::string &modelPath)
 
     auto gameObj = GameObject::createGameObject();
     gameObj.model = testModel;
-    gameObj.transform.position = { 0.0f, 0.0f, 1.0f };
+    gameObj.transform.position = { -1.0f, 1.5f, 1.0f };
     gameObj.transform.rotation = { 0.0f, 0.0f, 0.0f };
     //gameObj.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
     
     //gameObj.transform.scale = { 1.5f, 1.5f, 1.5f };
-    gameObj.transform.scale = { 0.5f, 0.5f, 0.5f };
+    gameObj.transform.scale = { 1.0f, 1.0f, 1.0f };
+    //gameObj.transform.scale = { 0.5f, 0.5f, 0.5f };
 
     gameObjects.emplace(gameObj.getId(), std::move(gameObj));
+
+    // Lights
+    std::vector<glm::vec3> lightColors {
+        {1.0f, 0.1f, 0.1f},
+        {0.1f, 0.1f, 1.0f},
+        {0.1f, 1.0f, 0.1f},
+        {1.0f, 1.0f, 0.1f},
+        {0.1f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f}
+    };
+
+    for (size_t i = 0; i < lightColors.size(); i++) {
+        auto pointLight = GameObject::createPointLight(0.8f, 0.1f, lightColors[i]);
+        auto rotateLight = glm::rotate(glm::mat4(1.0f), (i * glm::two_pi<float>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
+        pointLight.transform.position = glm::vec3(rotateLight * glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f));
+        gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+    }
 }
