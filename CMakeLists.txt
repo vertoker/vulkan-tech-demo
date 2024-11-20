@@ -3,7 +3,7 @@
 # Init
 #--------------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.20)
 project(vulkan-tech-demo VERSION 1.0 LANGUAGES CXX) # Your project name here
 set(CMAKE_CXX_STANDARD 20)
 

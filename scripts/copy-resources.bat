@@ -1,22 +1,22 @@
 @echo off
 rem Compile shaders before start
 
-cd ../..
+setlocal
+cd /d %~dp0
+cd ..
 
-set PROJECT_PATH=%cd%\
-set RESOURCES=%cd%\resources\
-
-rem Build folders
-set DEBUG_BUILD=%cd%\out\Debug\resources\
-set RELEASE_BUILD=%cd%\out\Release\resources\
+set SOURCE=%cd%\resources
+set DEBUG=%cd%\out\Debug\resources
+set RELEASE=%cd%\out\Release\resources
 
 @echo on
 
-md %RESOURCES%
-md %DEBUG_BUILD%
-md %RELEASE_BUILD%
+RD /S /Q "%DEBUG%"
+RD /S /Q "%RELEASE%"
 
-@RD /S /Q %DEBUG_BUILD%
-@RD /S /Q %RELEASE_BUILD%
-xcopy /s %RESOURCES% %DEBUG_BUILD%
-xcopy /s %RESOURCES% %RELEASE_BUILD%
+md "%SOURCE%"
+md "%DEBUG%"
+md "%RELEASE%"
+
+xcopy /s "%SOURCE%" "%DEBUG%"
+xcopy /s "%SOURCE%" "%RELEASE%"
