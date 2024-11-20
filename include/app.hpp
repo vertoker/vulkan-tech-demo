@@ -1,11 +1,11 @@
 #pragma once
 
 // app
-#include "gameobject.hpp"
 #include "render/window.hpp"
 #include "render/renderer.hpp"
-#include "input.hpp"
 #include "render/descriptor.hpp"
+#include "render/model.hpp"
+#include "input.hpp"
 
 #include "systems/world_render_system.hpp"
 #include "systems/point_light_system.hpp"
@@ -15,6 +15,7 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+#include <entt/entt.hpp>
 
 // std
 #include <iostream>
@@ -64,5 +65,5 @@ private:
 	std::unique_ptr<PointLightSystem> pointLightSystem;
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 
-	GameObject::map gameObjects;
+	entt::registry registry;
 };

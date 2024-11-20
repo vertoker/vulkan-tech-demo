@@ -2,7 +2,6 @@
 
 #include "render/device.hpp"
 #include "render/pipeline.hpp"
-#include "gameobject.hpp"
 #include "render/camera.hpp"
 #include "render/frameInfo.hpp"
 

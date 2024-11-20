@@ -1,5 +1,8 @@
 #include "systems/point_light_system.hpp"
-#include "glm/glm.hpp"
+
+#include <glm/glm.hpp>
+
+#include <ecs/components.hpp>
 
 struct PointLightPushConstants {
 	glm::vec4 position{};
@@ -23,16 +26,16 @@ void PointLightSystem::updateLights(VulkanFrameInfo& frameInfo, UniformBufferObj
 	auto rotateLight = glm::rotate(glm::mat4(1.f), 0.5f * frameInfo.deltaTime, {0.f, -1.f, 0.f});
 	int lightIndex = 0;
 
-	for (auto& kv : frameInfo.gameObjects) {
-		auto& obj = kv.second;
-		if (obj.pointLight == nullptr) continue;
+	auto view = frameInfo.registry.view<Transform, const PointLight>();
+	for (auto&& [entity, transform, light] : view.each()) {
+		if (&light == NULL) continue;
 
 		assert(lightIndex < MAX_LIGHTS && "Point lights exceed maximum specified");
 
-		obj.transform.position = glm::vec3(rotateLight * glm::vec4(obj.transform.position, 1.f));
+		transform.position = glm::vec3(rotateLight * glm::vec4(transform.position, 1.f));
 
-		ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.position, 1.0f);
-		ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
+		ubo.pointLights[lightIndex].position = glm::vec4(transform.position, 1.0f);
+		ubo.pointLights[lightIndex].color = glm::vec4(light.color, light.lightIntensity);
 
 		lightIndex += 1;
 	}
@@ -52,14 +55,14 @@ void PointLightSystem::render(VulkanFrameInfo& frameInfo)
 		0, nullptr
 	);
 
-	for (auto& kv : frameInfo.gameObjects) {
-		auto& obj = kv.second;
-		if (obj.pointLight == nullptr) continue;
+	auto view = frameInfo.registry.view<Transform, const PointLight>();
+	for (auto&& [entity, transform, light] : view.each()) {
+		if (&light == NULL) continue;
 
 		PointLightPushConstants push{}; // TODO fix this shit
-		push.position = glm::vec4(obj.transform.position, 1.0f);
-		push.color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
-		push.radius = obj.transform.scale.x;
+		push.position = glm::vec4(transform.position, 1.0f);
+		push.color = glm::vec4(light.color, light.lightIntensity);
+		push.radius = transform.scale.x;
 
 		vkCmdPushConstants(
 			frameInfo.commandBuffer,

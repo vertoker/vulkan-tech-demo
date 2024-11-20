@@ -1,5 +1,7 @@
 #include "app.hpp"
 
+#include <ecs/components.hpp>
+
 #include <tuple>
 #include <numeric>
 
@@ -56,9 +58,9 @@ void VulkanApp::run()
     }
     
     auto currentTime = std::chrono::high_resolution_clock::now();
-    auto cameraObject = GameObject::createGameObject();
+    Transform cameraObject{};
     
-    cameraObject.transform.position = glm::vec3{0.0f, -1.5f, 0.0f};
+    cameraObject.position = glm::vec3{0.0f, -1.5f, 0.0f};
 
 	while (!window->shouldClose()) {
 		glfwPollEvents();
@@ -76,7 +78,7 @@ void VulkanApp::run()
 
         //camera->setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         //camera->setViewTarget(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.5f));
-        camera->setViewYXZ(cameraObject.transform.position, cameraObject.transform.rotation);
+        camera->setViewYXZ(cameraObject.position, cameraObject.rotation);
 
         float aspect = renderer->getAspectRatio();
         // height is constant, width is flexible
@@ -94,7 +96,7 @@ void VulkanApp::run()
                 commandBuffer,
                 *camera,
                 globalDescriptorSets[frameIndex],
-                gameObjects
+                registry
             };
 
             // update
@@ -150,20 +152,21 @@ void VulkanApp::loadGameObjects(const std::string &modelPath)
 {
     std::shared_ptr<VulkanModel> testModel = VulkanModel::createModelFromFile(*device, modelPath);
 
-    auto gameObj = GameObject::createGameObject();
-    gameObj.model = testModel;
-    gameObj.transform.position = { -1.0f, 1.5f, 1.0f };
-    gameObj.transform.rotation = { 0.0f, 0.0f, 0.0f };
-    //gameObj.transform.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
-    
-    //gameObj.transform.scale = { 1.5f, 1.5f, 1.5f };
-    gameObj.transform.scale = { 1.0f, 1.0f, 1.0f };
-    //gameObj.transform.scale = { 0.5f, 0.5f, 0.5f };
+    auto entity1 = registry.create();
+    auto& tr1 = registry.emplace<Transform>(entity1);
+    auto& model1 = registry.emplace<ModelRenderer>(entity1);
 
-    gameObjects.emplace(gameObj.getId(), std::move(gameObj));
+    model1.model = testModel;
+    tr1.position = { -1.0f, 1.5f, 1.0f };
+    tr1.rotation = { 0.0f, 0.0f, 0.0f };
+    //tr1.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
+    
+    //tr1.scale = { 1.5f, 1.5f, 1.5f };
+    tr1.scale = { 1.0f, 1.0f, 1.0f };
+    //tr1.scale = { 0.5f, 0.5f, 0.5f };
 
     // Lights
-    std::vector<glm::vec3> lightColors {
+    static const std::vector<glm::vec3> lightColors {
         {1.0f, 0.1f, 0.1f},
         {0.1f, 0.1f, 1.0f},
         {0.1f, 1.0f, 0.1f},
@@ -173,9 +176,15 @@ void VulkanApp::loadGameObjects(const std::string &modelPath)
     };
 
     for (size_t i = 0; i < lightColors.size(); i++) {
-        auto pointLight = GameObject::createPointLight(0.9f, 0.1f, lightColors[i]);
+        auto lightEntity = registry.create();
+        auto& lightTr = registry.emplace<Transform>(entity1);
+        auto& lightComponent = registry.emplace<PointLight>(entity1);
+
+        lightComponent.color = lightColors[i];
+        lightComponent.lightIntensity = 0.9f;
+        lightTr.scale = glm::vec3{ 0.1f }; // radius
+
         auto rotateLight = glm::rotate(glm::mat4(1.0f), (i * glm::two_pi<float>()) / lightColors.size(), {0.0f, -1.0f, 0.0f});
-        pointLight.transform.position = glm::vec3(rotateLight * glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f));
-        gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+        lightTr.position = glm::vec3(rotateLight * glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f));
     }
 }

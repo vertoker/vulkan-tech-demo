@@ -1,5 +1,7 @@
 #include "systems/world_render_system.hpp"
 
+#include <ecs/components.hpp>
+
 struct PushConstantData {
 	glm::mat4 modelMatrix{ 1.f };
 	glm::mat4 normalMatrix{ 1.f };
@@ -29,24 +31,19 @@ void WorldRenderSystem::render(VulkanFrameInfo& frameInfo)
 		0, nullptr
 	);
 
-	for (auto& kv : frameInfo.gameObjects) {
-		// Test rotation anim
-		//obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.01f, glm::two_pi<float>());
-		//obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.005f, glm::two_pi<float>());
-		//obj.transform.rotation.w = glm::mod(obj.transform.rotation.w + 0.005f, 1.0f);
-
-		auto& obj = kv.second;
-		if (obj.model == nullptr) continue;
+	auto view = frameInfo.registry.view<const Transform, const ModelRenderer>();
+	for (auto&& [entity, transform, renderer] : view.each()) {
+		if (&renderer == NULL) continue;
 
 		PushConstantData push{};
-		push.modelMatrix = obj.transform.matrix();
-		push.normalMatrix = obj.transform.normalMatrix();
+		push.modelMatrix = transform.matrix();
+		push.normalMatrix = transform.normalMatrix();
 
 		vkCmdPushConstants(frameInfo.commandBuffer, pipelineLayout,
 			VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
 			0, sizeof(PushConstantData), &push);
-		obj.model->bind(frameInfo.commandBuffer);
-		obj.model->draw(frameInfo.commandBuffer);
+		renderer.model->bind(frameInfo.commandBuffer);
+		renderer.model->draw(frameInfo.commandBuffer);
 	}
 }
 

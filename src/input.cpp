@@ -1,6 +1,6 @@
 #include "input.hpp"
 
-void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& controller)
+void InputKeyboardController::move(GLFWwindow* window, float dt, Transform& controller)
 {
 	glm::vec3 rotate{ 0.0f };
 
@@ -11,13 +11,13 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& con
 
 	// Simple method to check rotation is none zero: dot product by itself
 	if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon())
-		controller.transform.rotation += lookSpeed * dt * glm::normalize(rotate);
+		controller.rotation += lookSpeed * dt * glm::normalize(rotate);
 
-	controller.transform.rotation.x = glm::clamp(controller.transform.rotation.x, -1.5f, 1.5f);
+	controller.rotation.x = glm::clamp(controller.rotation.x, -1.5f, 1.5f);
 	// mod = repeat, but for both directions
-	controller.transform.rotation.y = glm::mod(controller.transform.rotation.y, glm::two_pi<float>());
+	controller.rotation.y = glm::mod(controller.rotation.y, glm::two_pi<float>());
 
-	float yaw = controller.transform.rotation.y;
+	float yaw = controller.rotation.y;
 	const glm::vec3 forwardDir{ sin(yaw), 0.0f, cos(yaw) };
 	const glm::vec3 rightDir{ forwardDir.z, 0.0f, -forwardDir.x };
 	const glm::vec3 upDir{ 0.0f, -1.0f, 0.0f };
@@ -33,5 +33,5 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, GameObject& con
 
 	// Simple method to check position is none zero: dot product by itself
 	if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon())
-		controller.transform.position += moveSpeed * dt * glm::normalize(moveDir);
+		controller.position += moveSpeed * dt * glm::normalize(moveDir);
 }

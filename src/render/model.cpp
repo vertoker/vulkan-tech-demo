@@ -135,13 +135,13 @@ std::vector<VkVertexInputAttributeDescription> VulkanModel::Vertex::getAttribute
 	return attribureDescriptions;
 }
 
-std::unique_ptr<VulkanModel> VulkanModel::createModelFromFile(VulkanDevice& device, const std::string& filepath)
+std::shared_ptr<VulkanModel> VulkanModel::createModelFromFile(VulkanDevice& device, const std::string& filepath)
 {
 	Builder builder{};
 	builder.loadModel(filepath);
 	std::cout << "Loaded model, vertex count: " << builder.vertices.size() << 
 		", indices count: " << builder.indices.size() << std::endl;
-	return std::make_unique<VulkanModel>(device, builder);
+	return std::make_shared<VulkanModel>(device, builder);
 }
 
 void VulkanModel::Builder::loadModel(const std::string& filepath)

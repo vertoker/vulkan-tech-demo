@@ -48,7 +48,7 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_C
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/") # lib
 
 # Add Local libraries
-# add_subdirectory("lib/glm")
+add_subdirectory("lib/entt")
 
 # Add Package libraries (vcpkg)
 find_package(fmt CONFIG REQUIRED)
@@ -59,7 +59,7 @@ find_package(tinyobjloader CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
 
 # Link Local Libraries
-# target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE glm glfw)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE EnTT::EnTT)
 
 # Link Package Libraries
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE fmt::fmt)

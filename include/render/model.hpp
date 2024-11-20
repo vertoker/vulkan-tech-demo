@@ -44,7 +44,7 @@ public:
 	VulkanModel(const VulkanModel&) = delete;
 	VulkanModel& operator=(const VulkanModel&) = delete;
 
-	static std::unique_ptr<VulkanModel> createModelFromFile(VulkanDevice& device, const std::string& filepath);
+	static std::shared_ptr<VulkanModel> createModelFromFile(VulkanDevice& device, const std::string& filepath);
 
 	void bind(VkCommandBuffer commandBuffer);
 	void draw(VkCommandBuffer commandBuffer);

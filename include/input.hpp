@@ -1,9 +1,8 @@
 #pragma once
 
-#include "gameobject.hpp"
+#include "ecs/components.hpp"
 #include "render/window.hpp"
 
-// std
 #include <limits>
 
 class InputKeyboardController {
@@ -23,7 +22,7 @@ public:
 	};
 
 	// This is simplification will be works only in one window
-	void move(GLFWwindow* window, float dt, GameObject& controller);
+	void move(GLFWwindow* window, float dt, Transform& controller);
 
 	KeyMappings keys{};
 	float moveSpeed{ 0.8f };

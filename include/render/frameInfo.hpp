@@ -1,9 +1,9 @@
 #pragma once
 
 #include "camera.hpp"
-#include "gameobject.hpp"
 
 #include <vulkan/vulkan.h>
+#include <entt/entt.hpp>
 
 #define MAX_LIGHTS 10
 
@@ -14,10 +14,10 @@ struct VulkanFrameInfo {
     VkCommandBuffer commandBuffer;
     VulkanCamera& camera;
     VkDescriptorSet globalDescriptorSet;
-    GameObject::map& gameObjects;
+    entt::registry& registry;
 };
 
-struct PointLight {
+struct PointLightUBO {
 	glm::vec4 position{};
 	glm::vec4 color{};
 };
@@ -28,6 +28,6 @@ struct UniformBufferObject {
     glm::mat4 inverseView{1.0f}; // for get camera position
 
     glm::vec4 ambientLightColor{1.0f, 1.0f, 1.0f, 0.02f}; // w is intensity
-    PointLight pointLights[MAX_LIGHTS];
+    PointLightUBO pointLights[MAX_LIGHTS];
     int numLights;
 };
