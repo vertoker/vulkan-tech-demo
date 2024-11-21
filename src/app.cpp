@@ -4,6 +4,7 @@
 
 #include <tuple>
 #include <numeric>
+#include <glm/ext/matrix_transform.hpp>
 
 VulkanApp::VulkanApp(VulkanAppSettings& settings)
 {
@@ -177,8 +178,8 @@ void VulkanApp::loadGameObjects(const std::string &modelPath)
 
     for (size_t i = 0; i < lightColors.size(); i++) {
         auto lightEntity = registry.create();
-        auto& lightTr = registry.emplace<Transform>(entity1);
-        auto& lightComponent = registry.emplace<PointLight>(entity1);
+        auto& lightTr = registry.emplace<Transform>(lightEntity);
+        auto& lightComponent = registry.emplace<PointLight>(lightEntity);
 
         lightComponent.color = lightColors[i];
         lightComponent.lightIntensity = 0.9f;

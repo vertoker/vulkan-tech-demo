@@ -1,8 +1,10 @@
 #include "systems/point_light_system.hpp"
 
 #include <glm/glm.hpp>
+#include <fmt/core.h>
 
 #include <ecs/components.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 struct PointLightPushConstants {
 	glm::vec4 position{};
@@ -28,7 +30,7 @@ void PointLightSystem::updateLights(VulkanFrameInfo& frameInfo, UniformBufferObj
 
 	auto view = frameInfo.registry.view<Transform, const PointLight>();
 	for (auto&& [entity, transform, light] : view.each()) {
-		if (&light == NULL) continue;
+		//if (&light == NULL) continue;
 
 		assert(lightIndex < MAX_LIGHTS && "Point lights exceed maximum specified");
 
@@ -55,9 +57,10 @@ void PointLightSystem::render(VulkanFrameInfo& frameInfo)
 		0, nullptr
 	);
 
-	auto view = frameInfo.registry.view<Transform, const PointLight>();
+	auto view = frameInfo.registry.view<Transform, PointLight>();
 	for (auto&& [entity, transform, light] : view.each()) {
-		if (&light == NULL) continue;
+		//fmt::print("{} {} {} ; ", entity, transform.position_str(), light.color_str());
+		//if (&light == NULL) continue;
 
 		PointLightPushConstants push{}; // TODO fix this shit
 		push.position = glm::vec4(transform.position, 1.0f);
@@ -75,6 +78,7 @@ void PointLightSystem::render(VulkanFrameInfo& frameInfo)
 
 		vkCmdDraw(frameInfo.commandBuffer, 6, 1, 0, 0);
 	}
+	//fmt::print("\n");
 }
 
 void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)

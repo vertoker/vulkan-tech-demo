@@ -1,5 +1,8 @@
 #include "input.hpp"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
 void InputKeyboardController::move(GLFWwindow* window, float dt, Transform& controller)
 {
 	glm::vec3 rotate{ 0.0f };

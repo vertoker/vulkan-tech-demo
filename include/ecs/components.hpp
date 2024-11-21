@@ -2,10 +2,9 @@
 
 #include "render/model.hpp"
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <fmt/core.h>
 
 #include <memory>
-#include <format>
 
 struct Transform {
 	glm::vec3 position{ 0.0f, 0.0f, 0.0f };
@@ -13,9 +12,9 @@ struct Transform {
 	//glm::quat rotation{ 1.0f, 0.0f, 0.0f, 0.0f };
 	glm::vec3 scale{ 1.f, 1.f, 1.f };
 
-	std::string position_str() { return std::format("({}, {}, {})", position.x, position.y, position.z); }
-	std::string rotation_str() { return std::format("({}, {}, {})", rotation.x, rotation.y, rotation.z); }
-	std::string scale_str() { return std::format("({}, {}, {})", scale.x, scale.y, scale.z); }
+	std::string position_str() const { return fmt::format("({}, {}, {})", position.x, position.y, position.z); }
+	std::string rotation_str() const { return fmt::format("({}, {}, {})", rotation.x, rotation.y, rotation.z); }
+	std::string scale_str() const { return fmt::format("({}, {}, {})", scale.x, scale.y, scale.z); }
 
 	//glm::mat4 rotation_matrix() const;
 
@@ -27,6 +26,9 @@ struct Transform {
 struct PointLight {
 	float lightIntensity = 1.0f;
 	glm::vec3 color{ 1.0f };
+
+	std::string lightIntensity_str() const { return fmt::format("{}", lightIntensity); }
+	std::string color_str() const { return fmt::format("({}, {}, {})", color.x, color.y, color.z); }
 };
 
 struct ModelRenderer {

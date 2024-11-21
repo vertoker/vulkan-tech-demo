@@ -33,7 +33,7 @@ void WorldRenderSystem::render(VulkanFrameInfo& frameInfo)
 
 	auto view = frameInfo.registry.view<const Transform, const ModelRenderer>();
 	for (auto&& [entity, transform, renderer] : view.each()) {
-		if (&renderer == NULL) continue;
+		//if (&renderer == NULL) continue;
 
 		PushConstantData push{};
 		push.modelMatrix = transform.matrix();
