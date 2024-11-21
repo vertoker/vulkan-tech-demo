@@ -60,8 +60,9 @@ void VulkanApp::run()
     
     auto currentTime = std::chrono::high_resolution_clock::now();
     Transform cameraObject{};
-    
-    cameraObject.position = glm::vec3{0.0f, -1.5f, 0.0f};
+
+    cameraObject.position = glm::vec3{ 0.0f, -1.5f, 4.0f };
+    cameraObject.rotation = glm::vec3{ -0.4f, glm::pi<float>(), 0.0f };
 
 	while (!window->shouldClose()) {
 		glfwPollEvents();

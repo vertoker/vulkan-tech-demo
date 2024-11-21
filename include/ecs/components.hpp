@@ -10,7 +10,7 @@ struct Transform {
 	glm::vec3 position{ 0.0f, 0.0f, 0.0f };
 	glm::vec3 rotation{ 0.0f, 0.0f, 0.0f };
 	//glm::quat rotation{ 1.0f, 0.0f, 0.0f, 0.0f };
-	glm::vec3 scale{ 1.f, 1.f, 1.f };
+	glm::vec3 scale{ 1.0f, 1.0f, 1.0f };
 
 	std::string position_str() const { return fmt::format("({}, {}, {})", position.x, position.y, position.z); }
 	std::string rotation_str() const { return fmt::format("({}, {}, {})", rotation.x, rotation.y, rotation.z); }

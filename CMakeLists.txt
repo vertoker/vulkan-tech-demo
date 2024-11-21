@@ -57,17 +57,19 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
+find_package(imgui REQUIRED)
 
 # Link Local Libraries
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE EnTT::EnTT)
 
-# Link Package Libraries
+# Link Package Libraries (vcpkg)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE fmt::fmt)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Boost::dll)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Vulkan::Vulkan)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui::imgui)
 
 #--------------------------------------------------------------------------------
 # Utility
