@@ -1,12 +1,12 @@
 #pragma once
 
-#include "render_system.hpp"
+#include "base_render_system.hpp"
 
-class WorldRenderSystem : public VulkanRenderSystem {
+class WorldRenderSystem : public VulkanRenderable, public VulkanWorldSystem {
 public:
 	WorldRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
 		const std::string& vertFilePath, const std::string& fragFilePath);
-	~WorldRenderSystem() override;
+	~WorldRenderSystem();
 	
 	void render(VulkanFrameInfo& frameInfo) override;
 

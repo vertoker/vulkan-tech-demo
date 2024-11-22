@@ -16,15 +16,18 @@
 #include <memory>
 #include <vector>
 
-class VulkanRenderSystem {
+class VulkanRenderable {
 public:
-	VulkanRenderSystem(VulkanDevice& device) : device{device} {}
-	virtual ~VulkanRenderSystem() {}
-
-	VulkanRenderSystem(const VulkanRenderSystem&) = delete;
-	VulkanRenderSystem& operator=(const VulkanRenderSystem&) = delete;
-
 	virtual void render(VulkanFrameInfo& frameInfo) {}
+	VulkanRenderable() = default;
+
+	VulkanRenderable(const VulkanRenderable&) = delete;
+	VulkanRenderable& operator=(const VulkanRenderable&) = delete;
+};
+
+class VulkanWorldSystem {
+public:
+	VulkanWorldSystem(VulkanDevice& device) : device{device} {}
 
 protected:
 	virtual void createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {}

@@ -13,7 +13,7 @@ struct PointLightPushConstants {
 };
 
 PointLightSystem::PointLightSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
-	const std::string& vertFilePath, const std::string& fragFilePath) : VulkanRenderSystem(device)
+	const std::string& vertFilePath, const std::string& fragFilePath) : VulkanWorldSystem(device)
 {
 	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass, vertFilePath, fragFilePath);

@@ -9,6 +9,7 @@
 
 #include "systems/world_render_system.hpp"
 #include "systems/point_light_system.hpp"
+#include "systems/imgui_system.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -63,6 +64,8 @@ private:
 
 	std::unique_ptr<WorldRenderSystem> worldRenderSystem;
 	std::unique_ptr<PointLightSystem> pointLightSystem;
+	std::unique_ptr<ImguiSystem> imguiSystem;
+
 	std::unique_ptr<InputKeyboardController> keyboardInput;
 
 	entt::registry registry;

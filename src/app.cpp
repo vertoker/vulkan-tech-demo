@@ -115,6 +115,7 @@ void VulkanApp::run()
 			renderer->beginSwapChainRenderPass(commandBuffer);
             worldRenderSystem->render(frameInfo);
             pointLightSystem->render(frameInfo);
+            imguiSystem->render(frameInfo);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}
@@ -149,6 +150,10 @@ void VulkanApp::createRenderSystems(VulkanAppSettings& settings)
         globalSetLayout->getDescriptorSetLayout(),
 		settings.pointLight_vertShaderPath, 
         settings.pointLight_fragShaderPath);
+    imguiSystem = std::make_unique<ImguiSystem>(*device,
+        renderer->getSwapChainRenderPass(),
+        globalPool->descriptorPool(),
+        window->getPtr());
 }
 
 void VulkanApp::loadGameObjects(const std::string &modelPath)

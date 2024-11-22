@@ -26,29 +26,47 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "${SOURCE_DIR}/*.c" "${SOURCE_DIR}/*
 include_directories("${INCLUDE_DIR}")
 
 # finally add all founded include/ and src/ files into compiler as a program
-add_executable("${CMAKE_PROJECT_NAME}" "${INCLUDES}" "${SOURCES}")
+#add_executable("${CMAKE_PROJECT_NAME}" "${INCLUDES}" "${SOURCES}")
 
 #file(GLOB_RECURSE SOURCES CMAKE_CONFIGURE_DEPENDS "src/*.h" "src/*.c" "src/*.hpp" "src/*.cpp")
 #add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
 #--------------------------------------------------------------------------------
-# Resources (feature)
-#--------------------------------------------------------------------------------
-
-# Use it in development
-target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
-# Use it in build
-#target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/resources/")
-
-#--------------------------------------------------------------------------------
-# Libraries
+# Executable and include libraries
 #--------------------------------------------------------------------------------
 
 # Variables
 set(LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 
+# Lib Include Directories
+include_directories("${LIB_DIR}/imgui" "${LIB_DIR}/imgui/backends" ..)
+
+file(GLOB_RECURSE IMGUI_INCLUDES CONFIGURE_DEPENDS 
+	"${LIB_DIR}/imgui.h" 
+	"${LIB_DIR}/imgui/backends/imgui_impl_vulkan.h" 
+	"${LIB_DIR}/imgui/backends/imgui_impl_glfw.h"
+)
+file(GLOB_RECURSE IMGUI_SOURCES CONFIGURE_DEPENDS 
+	"${LIB_DIR}/imgui.cpp" 
+	"${LIB_DIR}/imgui/backends/imgui_impl_vulkan.cpp" 
+	"${LIB_DIR}/imgui/backends/imgui_impl_glfw.cpp"
+	"${LIB_DIR}/imgui/backends/imgui_draw.cpp"
+	"${LIB_DIR}/imgui/backends/imgui_demo.cpp"
+	"${LIB_DIR}/imgui/backends/imgui_tables.cpp"
+	"${LIB_DIR}/imgui/backends/imgui_widgets.cpp"
+)
+
+# Add executable with everything
+add_executable("${CMAKE_PROJECT_NAME}" "${INCLUDES}" "${SOURCES}" "${IMGUI_INCLUDES}" "${IMGUI_SOURCES}")
+
 # Include folder in directory (etc. combine folders)
-target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/") # lib
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/") # base
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui")
+target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/backends")
+
+#--------------------------------------------------------------------------------
+# Libraries
+#--------------------------------------------------------------------------------
 
 # Add Local libraries
 add_subdirectory("lib/entt")
@@ -71,9 +89,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Vulkan::Vulkan)
-
-# Lib Include Directories
-include_directories("${LIB_DIR}/imgui" "${LIB_DIR}/imgui/backends")
 
 #--------------------------------------------------------------------------------
 # Utility
