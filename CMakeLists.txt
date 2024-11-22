@@ -14,7 +14,7 @@ set(DISABLE_CONSOLE 0)
 # Src & Include
 #--------------------------------------------------------------------------------
 
-# Set variables for short
+# Variables
 set(INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -44,6 +44,9 @@ target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC RESOURCES_DIR="${CMAKE_C
 # Libraries
 #--------------------------------------------------------------------------------
 
+# Variables
+set(LIB_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib")
+
 # Include folder in directory (etc. combine folders)
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/") # lib
 
@@ -57,7 +60,6 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
-find_package(imgui REQUIRED)
 
 # Link Local Libraries
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE EnTT::EnTT)
@@ -69,7 +71,9 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Vulkan::Vulkan)
-target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE imgui::imgui)
+
+# Lib Include Directories
+include_directories("${LIB_DIR}/imgui" "${LIB_DIR}/imgui/backends")
 
 #--------------------------------------------------------------------------------
 # Utility

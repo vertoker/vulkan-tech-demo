@@ -2,9 +2,8 @@
 
 #include <ecs/components.hpp>
 
-#include <tuple>
-#include <numeric>
 #include <glm/ext/matrix_transform.hpp>
+#define GLFW_INCLUDE_VULK
 
 VulkanApp::VulkanApp(VulkanAppSettings& settings)
 {
@@ -65,7 +64,9 @@ void VulkanApp::run()
     cameraObject.rotation = glm::vec3{ -0.4f, glm::pi<float>(), 0.0f };
 
 	while (!window->shouldClose()) {
+        // Pre render
 		glfwPollEvents();
+        
 
         auto newTime = std::chrono::high_resolution_clock::now();
         float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
