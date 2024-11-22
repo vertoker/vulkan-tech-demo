@@ -7,6 +7,7 @@ Libraries I use:
 - [GLFW](https://github.com/glfw/glfw)
 - [Vulkan](https://github.com/KhronosGroup/Vulkan-Hpp.git)
 - [EnTT](https://github.com/skypjack/entt)
+- [ImGui](https://github.com/ocornut/imgui)
 - [Bullet Physics SDK](https://github.com/bulletphysics/bullet3)
 
 Guides I read/watch for this demo
@@ -14,5 +15,6 @@ Guides I read/watch for this demo
 - [Vulkan Game Engine Tutorials](https://youtube.com/playlist?list=PL8327DO66nu9qYVKLDmdLW_84-yE4auCR&si=sYuNqZ_-I2fiC8TS)
 Also usable docs
 - [ECS in EnTT](https://github.com/skypjack/entt/wiki/Entity-Component-System)
+- [ImGui Guide 1](https://github.com/ocornut/imgui/blob/master/examples/example_glfw_vulkan/main.cpp)
 
 CMake project based on [my template](https://github.com/vertoker/cmake-template)
