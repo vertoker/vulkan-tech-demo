@@ -47,13 +47,13 @@ file(GLOB_RECURSE IMGUI_INCLUDES CONFIGURE_DEPENDS
 	"${LIB_DIR}/imgui/backends/imgui_impl_glfw.h"
 )
 file(GLOB_RECURSE IMGUI_SOURCES CONFIGURE_DEPENDS 
-	"${LIB_DIR}/imgui.cpp" 
+	"${LIB_DIR}/imgui.cpp"
+	"${LIB_DIR}/imgui/imgui_draw.cpp"
+	"${LIB_DIR}/imgui/imgui_demo.cpp"
+	"${LIB_DIR}/imgui/imgui_tables.cpp"
+	"${LIB_DIR}/imgui/imgui_widgets.cpp"
 	"${LIB_DIR}/imgui/backends/imgui_impl_vulkan.cpp" 
 	"${LIB_DIR}/imgui/backends/imgui_impl_glfw.cpp"
-	"${LIB_DIR}/imgui/backends/imgui_draw.cpp"
-	"${LIB_DIR}/imgui/backends/imgui_demo.cpp"
-	"${LIB_DIR}/imgui/backends/imgui_tables.cpp"
-	"${LIB_DIR}/imgui/backends/imgui_widgets.cpp"
 )
 
 # Add executable with everything

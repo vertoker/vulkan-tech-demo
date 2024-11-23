@@ -2,9 +2,9 @@
 #include <systems/imgui_system.hpp>
 #include <render/swapchain.hpp>
 
-//#include "imgui.h"
-//#include "imgui_impl_glfw.h"
-//#include "imgui_impl_vulkan.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_vulkan.h"
 
 // Based on https://github.com/ocornut/imgui/blob/master/examples/example_glfw_vulkan/main.cpp
 
@@ -19,7 +19,7 @@ static void check_vk_result(VkResult err)
 
 ImguiSystem::ImguiSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorPool descriptorPool, GLFWwindow* window)
 {
-	/*
+	
     IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -47,16 +47,26 @@ ImguiSystem::ImguiSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescri
     init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
     init_info.CheckVkResultFn = check_vk_result;
     ImGui_ImplVulkan_Init(&init_info);
-    */
+    
 }
 ImguiSystem::~ImguiSystem()
 {
-    /*ImGui_ImplVulkan_Shutdown();
+    ImGui_ImplVulkan_Shutdown();
     ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();*/
+    ImGui::DestroyContext();
 }
 
 void ImguiSystem::render(VulkanFrameInfo& frameInfo)
 {
+    // @TODO finish imgui
+    
+    /*bool show_demo_window = true;
 
+    ImGui_ImplVulkan_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    ImGui::ShowDemoWindow(&show_demo_window);
+
+    ImGui::Render();*/
 }
