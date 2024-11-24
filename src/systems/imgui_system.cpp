@@ -59,6 +59,7 @@ ImguiSystem::~ImguiSystem()
 void ImguiSystem::render(VulkanFrameInfo& frameInfo)
 {
     // @TODO finish imgui
+    // use https://github.com/ocornut/imgui/blob/master/examples/example_glfw_vulkan/main.cpp
     
     /*bool show_demo_window = true;
 

@@ -9,6 +9,9 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Other features
 set(DISABLE_CONSOLE 0)
+set(BUILD_BULLET_ROBOTICS_EXTRA 0)
+set(BUILD_BULLET_ROBOTICS_GUI_EXTRA 0)
+set(BUILD_GIMPACTUTILS_EXTRA 0)
 
 #--------------------------------------------------------------------------------
 # Src & Include
@@ -78,6 +81,7 @@ find_package(glfw3 CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(tinyobjloader CONFIG REQUIRED)
 find_package(Vulkan REQUIRED)
+find_package(Bullet CONFIG REQUIRED)
 
 # Link Local Libraries
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE EnTT::EnTT)
@@ -89,6 +93,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glfw)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE glm::glm)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE tinyobjloader::tinyobjloader)
 target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Vulkan::Vulkan)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${BULLET_LIBRARIES})
 
 #--------------------------------------------------------------------------------
 # Utility
