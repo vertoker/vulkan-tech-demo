@@ -16,5 +16,6 @@ Guides I read/watch for this demo
 Also usable docs
 - [ECS in EnTT](https://github.com/skypjack/entt/wiki/Entity-Component-System)
 - [ImGui Guide 1](https://github.com/ocornut/imgui/blob/master/examples/example_glfw_vulkan/main.cpp)
+- [Bullet3 Guide 1](https://habr.com/ru/articles/709498/)
 
 CMake project based on [my template](https://github.com/vertoker/cmake-template)

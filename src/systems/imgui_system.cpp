@@ -19,7 +19,6 @@ static void check_vk_result(VkResult err)
 
 ImguiSystem::ImguiSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorPool descriptorPool, GLFWwindow* window)
 {
-	
     IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -31,7 +30,6 @@ ImguiSystem::ImguiSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescri
 	//ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForVulkan(window, true);
     ImGui_ImplVulkan_InitInfo init_info = {};
     init_info.Instance = device.instance();
     init_info.PhysicalDevice = device.physicalDevice();
@@ -46,8 +44,9 @@ ImguiSystem::ImguiSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescri
     init_info.ImageCount = VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
     init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
     init_info.CheckVkResultFn = check_vk_result;
+
+    ImGui_ImplGlfw_InitForVulkan(window, true);
     ImGui_ImplVulkan_Init(&init_info);
-    
 }
 ImguiSystem::~ImguiSystem()
 {
@@ -56,7 +55,7 @@ ImguiSystem::~ImguiSystem()
     ImGui::DestroyContext();
 }
 
-void ImguiSystem::render(VulkanFrameInfo& frameInfo)
+void ImguiSystem::execute(VulkanFrameInfo& frameInfo)
 {
     // @TODO finish imgui
     // use https://github.com/ocornut/imgui/blob/master/examples/example_glfw_vulkan/main.cpp

@@ -113,9 +113,9 @@ void VulkanApp::run()
 
             // rendering
 			renderer->beginSwapChainRenderPass(commandBuffer);
-            worldRenderSystem->render(frameInfo);
-            pointLightSystem->render(frameInfo);
-            imguiSystem->render(frameInfo);
+            worldRenderSystem->execute(frameInfo);
+            pointLightSystem->execute(frameInfo);
+            imguiSystem->execute(frameInfo);
 			renderer->endSwapChainRenderPass(commandBuffer);
 			renderer->endFrame();
 		}

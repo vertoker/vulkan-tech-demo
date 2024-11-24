@@ -1,15 +1,15 @@
 #pragma once
 
-#include "base_render_system.hpp"
+#include "base_system.hpp"
 
-class PointLightSystem : public VulkanRenderable, public VulkanWorldSystem {
+class PointLightSystem : public BaseSystem, public BaseWorldRenderSystem {
 public:
 	PointLightSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
 		const std::string& vertFilePath, const std::string& fragFilePath);
 	~PointLightSystem();
 	
 	void updateLights(VulkanFrameInfo& frameInfo, UniformBufferObject& ubo);
-	void render(VulkanFrameInfo& frameInfo) override;
+	void execute(VulkanFrameInfo& frameInfo) override;
 
 private:
 	void createPipelineLayout(VkDescriptorSetLayout globalSetLayout) override;

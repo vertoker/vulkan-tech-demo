@@ -1,11 +1,11 @@
 #pragma once
 
-#include "base_render_system.hpp"
+#include "base_system.hpp"
 
-class ImguiSystem : public VulkanRenderable {
+class ImguiSystem : public BaseSystem {
 public:
 	ImguiSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorPool descriptorPool, GLFWwindow* window);
 	~ImguiSystem();
 
-	void render(VulkanFrameInfo& frameInfo) override;
+	void execute(VulkanFrameInfo& frameInfo) override;
 };

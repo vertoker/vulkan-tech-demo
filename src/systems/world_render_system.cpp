@@ -8,7 +8,7 @@ struct PushConstantData {
 };
 
 WorldRenderSystem::WorldRenderSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
-	const std::string& vertFilePath, const std::string& fragFilePath) : VulkanWorldSystem(device)
+	const std::string& vertFilePath, const std::string& fragFilePath) : BaseWorldRenderSystem(device)
 {
 	createPipelineLayout(globalSetLayout);
 	createPipeline(renderPass, vertFilePath, fragFilePath);
@@ -18,7 +18,7 @@ WorldRenderSystem::~WorldRenderSystem()
 	vkDestroyPipelineLayout(device.device(), pipelineLayout, nullptr);
 }
 
-void WorldRenderSystem::render(VulkanFrameInfo& frameInfo)
+void WorldRenderSystem::execute(VulkanFrameInfo& frameInfo)
 {
 	pipeline->bind(frameInfo.commandBuffer);
 
