@@ -60,14 +60,13 @@ void VulkanApp::run()
     auto currentTime = std::chrono::high_resolution_clock::now();
     Transform cameraObject{};
 
-    cameraObject.position = glm::vec3{ 0.0f, -1.5f, 4.0f };
-    cameraObject.rotation = glm::vec3{ -0.4f, glm::pi<float>(), 0.0f };
+    cameraObject.position = glm::vec3{ 0.0f, -0.5f, 4.0f };
+    cameraObject.rotation = glm::vec3{ 0.4f, glm::pi<float>(), 0.0f };
 
 	while (!window->shouldClose()) {
         // Pre render
 		glfwPollEvents();
         
-
         auto newTime = std::chrono::high_resolution_clock::now();
         float deltaTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
         currentTime = newTime;
@@ -87,8 +86,8 @@ void VulkanApp::run()
         // height is constant, width is flexible
         // right - left = aspect * (bottom - top) (y is inverted)
 
-        //camera->setOrthographicProjection(-aspect * 0.6f, aspect * 0.6f, -0.6f, 0.6f, -5, 5);
-        camera->setPerspectiveProjection(glm::radians(50.0f), aspect, 0.1f, 10.0f);
+        //camera->setOrthographicProjection_invertY(-aspect * 0.6f, aspect * 0.6f, -0.6f, 0.6f, -5, 5);
+        camera->setPerspectiveProjection_plusY(glm::radians(50.0f), aspect, 0.1f, 10.0f);
 
 		// On Linux, resizing can be occurs wrong rendering
 		// On Linux, you need another frame update method
@@ -165,7 +164,7 @@ void VulkanApp::loadGameObjects(const std::string &modelPath)
     auto& model1 = registry.emplace<ModelRenderer>(entity1);
 
     model1.model = testModel;
-    tr1.position = { -1.0f, 1.5f, 1.0f };
+    tr1.position = { 1.5f, -3.5f, 1.0f };
     tr1.rotation = { 0.0f, 0.0f, 0.0f };
     //tr1.rotation = { 1.0f, 1.0f, 0.5f, 0.0f };
     

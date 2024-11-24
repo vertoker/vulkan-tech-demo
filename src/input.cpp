@@ -9,8 +9,8 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, Transform& cont
 
 	if (glfwGetKey(window, keys.lookRight) == GLFW_PRESS) rotate.y += 1.0f;
 	if (glfwGetKey(window, keys.lookLeft) == GLFW_PRESS) rotate.y -= 1.0f;
-	if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) rotate.x += 1.0f;
-	if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) rotate.x -= 1.0f;
+	if (glfwGetKey(window, keys.lookUp) == GLFW_PRESS) rotate.x -= 1.0f;
+	if (glfwGetKey(window, keys.lookDown) == GLFW_PRESS) rotate.x += 1.0f;
 
 	// Simple method to check rotation is none zero: dot product by itself
 	if (glm::dot(rotate, rotate) > std::numeric_limits<float>::epsilon())
@@ -23,7 +23,7 @@ void InputKeyboardController::move(GLFWwindow* window, float dt, Transform& cont
 	float yaw = controller.rotation.y;
 	const glm::vec3 forwardDir{ sin(yaw), 0.0f, cos(yaw) };
 	const glm::vec3 rightDir{ forwardDir.z, 0.0f, -forwardDir.x };
-	const glm::vec3 upDir{ 0.0f, -1.0f, 0.0f };
+	const glm::vec3 upDir{ 0.0f, 1.0f, 0.0f };
 
 	glm::vec3 moveDir{ 0.0f };
 
