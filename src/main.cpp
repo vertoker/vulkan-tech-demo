@@ -6,8 +6,6 @@
 #include <fmt/core.h>
 #include <boost/dll.hpp>
 
-#include "btBulletDynamicsCommon.h"
-
 // std
 #include <cstdlib>
 #include <iostream>

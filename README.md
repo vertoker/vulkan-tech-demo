@@ -1,7 +1,5 @@
 # Vulkan Tech Demo
 
-Cool lookng demo with modern (2024) graphics
-
 Libraries I use:
 - [GLM](https://github.com/g-truc/glm)
 - [GLFW](https://github.com/glfw/glfw)
