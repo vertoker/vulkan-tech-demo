@@ -43,7 +43,7 @@ void VulkanPipeline::createGraphicsPipeline(
 
 	shaderStages[0].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	shaderStages[0].pNext = nullptr;
-	shaderStages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
+	shaderStages[0].stage = VkShaderStageFlagBits::VK_SHADER_STAGE_VERTEX_BIT;
 	shaderStages[0].module = vertShaderModule;
 	// name of function in vertex shader
 	shaderStages[0].pName = "main";
