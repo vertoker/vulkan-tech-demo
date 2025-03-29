@@ -389,16 +389,6 @@ VkSurfaceFormatKHR VulkanSwapChain::chooseSwapSurfaceFormat(
 VkPresentModeKHR VulkanSwapChain::chooseSwapPresentMode(
     const std::vector<VkPresentModeKHR>& availablePresentModes)
 {
-    // Standard V-Sync, remove tearing, but add stutters and GPU blocking
-    // - Advantages - VSync bound, good for mobile, always supported
-    // - Disadvantages - high latency
-    for (const auto &availablePresentMode : availablePresentModes) {
-        if (availablePresentMode == VK_PRESENT_MODE_FIFO_KHR) {
-            std::cout << "Present mode: V-Sync" << std::endl;
-            return availablePresentMode;
-        }
-    }
-
     // Better option for swap buffers, known as "triple buffering"
     // Fixes issues with standard V-Sync - no tearing, no GPU blocking and no stutters
     // - Advantages - Low Latency
@@ -415,6 +405,16 @@ VkPresentModeKHR VulkanSwapChain::chooseSwapPresentMode(
     for (const auto& availablePresentMode : availablePresentModes) {
         if (availablePresentMode == VK_PRESENT_MODE_FIFO_RELAXED_KHR) {
             std::cout << "Present mode: V-Sync Relaxed" << std::endl;
+            return availablePresentMode;
+        }
+    }
+
+    // Standard V-Sync, remove tearing, but add stutters and GPU blocking
+    // - Advantages - VSync bound, good for mobile, always supported
+    // - Disadvantages - high latency
+    for (const auto& availablePresentMode : availablePresentModes) {
+        if (availablePresentMode == VK_PRESENT_MODE_FIFO_KHR) {
+            std::cout << "Present mode: V-Sync" << std::endl;
             return availablePresentMode;
         }
     }
